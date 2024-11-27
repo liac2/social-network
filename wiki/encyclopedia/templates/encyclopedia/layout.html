@@ -14,7 +14,7 @@
                 <h2>Wiki</h2>
                 <form action="{% url 'wiki:search' %}" method="post">
                     {% csrf_token %}
-                    <input class="search" type="text" name="q" autocomplete="off" placeholder="Search Encyclopedia">
+                    { form }
                 </form>
                 <div>
                     <a href="{% url 'wiki:index' %}">Home</a>

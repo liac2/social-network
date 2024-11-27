@@ -1,24 +1,50 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django import forms
 
 from . import util
 
+class SearchPage(forms.Form):
+    search = forms.CharField()
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        "entries": util.list_entries(), "form": SearchPage(), "heading": "All Pages"
     })
 
 
-def search(request):
-    
-    # Use id_token for post form 
-    """https://cs50.harvard.edu/web/2020/notes/3/#forms:~:text=the%20bank%E2%80%99s%20website!-,To,-solve%20this%20problem"""
+def search(request): 
     # Search for page
-    # If found: visit page
-    # Else: show page titles with have query as substring 
-    pass
+    if request.method == "POST":
+        search = SearchPage(request.POST)
+
+        if search.is_valid():
+            page = search.cleaned_data["search"]
+            content = util.get_entry(page)
+
+            # If found: visit page
+            if content != None:
+                return render(request, "encyclopedia/page.html", {
+                    "title": page, "content": content
+                })
+
+            # Else: show page titles with have query as substring 
+            else: 
+                return render(request, "encyclopedia/index.html", {
+                    "entries": , "form": SearchPage(), "heading": "Page not Found", "message": "Similar Pages" 
+                })
+            
+        # If search invalid: error
+        else:
+            return render(request, "encyclopedia/error.html", {
+                "entries": , "form": SearchPage(), "heading": "Page not Found", "message": "Similar Pages" 
+            })
+
+    else:
+        return
+    
+    
 
 
 # Only for using wiki/ url

@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block body %}
-    <p>
-        {{ content }}
-    </p>
+
+    {{ content|safe }}
+
     <a href="{% url 'wiki:wiki' %}{{ title }}/edit">
         <button>
-            click
+            edit
         </button>
     </a>
 {% endblock %}

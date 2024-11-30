@@ -1,7 +1,12 @@
+from typing import Any, Mapping
+from django.forms.renderers import BaseRenderer
+from django.forms.utils import ErrorList
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django import forms
+from random import randrange
+from markdown2 import markdown
 
 from . import util
 
@@ -12,10 +17,33 @@ class NewPage(forms.Form):
     title = forms.CharField(label="Enter a title")
     content = forms.CharField(widget=forms.Textarea, label="Enter content")
 
+class EditPage(forms.Form):
+    content = forms.CharField(widget=forms.Textarea)
+        
+
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries(), "form": SearchPage(), "heading": "All Pages"
     })
+
+# Visiting a random page
+def random(request):
+    if request.method == "GET":
+        pages = util.list_entries()
+        length = len(pages)
+        if length == 0:
+            return render(request, "encyclopedia/error.html", {
+                "error": "No pages exist" 
+            })
+        index = randrange(0, length)
+        page = pages[index]
+        if ".md" in page:
+            return render(request, "encyclopedia/error.html", {
+                "error": "Not appropriate url" 
+            })
+        return HttpResponseRedirect(reverse('wiki:wiki') + page)
+
+
 
 
 # Creating new wiki page
@@ -39,7 +67,7 @@ def new(request):
                 "form": SearchPage(),"new_page_form": data, "heading": "Create new page"
             })
 
-
+    # Handle GET
     else:
         return render(request, "encyclopedia/new.html", {
             "form": SearchPage() ,"new_page_form": NewPage(), "heading": "Create new page"
@@ -92,7 +120,35 @@ def wiki(request):
 
 # Edits a page
 def edit(request, title):
-    pass
+    if request.method == "POST":
+        form = EditPage(request.POST)
+        print(form)
+        if form.is_valid():
+            content = form.cleaned_data["content"]
+            util.save_entry(title, content)
+            return HttpResponseRedirect(reverse('wiki:wiki') + title)
+
+        # If search invalid: let user try again
+        else:
+            return render(request, "encyclopedia/edit.html", {
+                "title": title, "form": SearchPage(), "textarea_form": form
+            })
+    
+    # Handle GET 
+    else:
+        data = util.get_entry(title)
+
+        # If entry not found: error
+        if data == None:
+            return render(request, "encyclopedia/error.html", {
+                    "error": "Page not found" 
+            })
+        
+        # Render edit.html
+        return render(request, "encyclopedia/edit.html", {
+            "title": title, "form": SearchPage(), "textarea_form": EditPage(initial={"content": data})
+        })
+
 
 def page(request, title):
 
@@ -104,6 +160,7 @@ def page(request, title):
         return render(request, "encyclopedia/error.html", {
                 "error": "Page not found" 
         })
+    data = markdown(data)
     
     # set <title> to the var title 
     return render(request, "encyclopedia/page.html", {

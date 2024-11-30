@@ -9,5 +9,6 @@ urlpatterns = [
     path("wiki/<str:title>/edit", views.edit, name="edit"),
     path("wiki/", views.wiki, name="wiki"),             # wiki/ path without argument - only for using as url
     path("search/", views.search, name="search"),
-    path("new/", views.new, name="new")
+    path("new/", views.new, name="new"),
+    path("random/", views.random, name="random")
 ]

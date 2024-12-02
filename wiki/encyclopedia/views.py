@@ -85,6 +85,7 @@ def search(request):
 
             # If found: visit page
             if content != None:
+                content = markdown(content)
                 return render(request, "encyclopedia/page.html", {
                     "title": title, "form": SearchPage(), "content": content
                 })

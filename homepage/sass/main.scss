@@ -1,0 +1,66 @@
+// Own variables
+$subtitle: 32px;
+
+// custom variables
+$primary: #FF8000;
+$h1-font-size: 72px;
+
+
+
+// import functions & variables
+@import '../node_modules/bootstrap/scss/_functions';
+@import '../node_modules/bootstrap/scss/_variables';
+
+// custom themes
+$custom-theme-colors: (
+    "modern": #c0591d,
+    "vintage": #1d1d1d
+);
+
+// merge themes
+$theme-colors: map-merge($custom-theme-colors, $theme-colors);
+
+
+// import bootstrap
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+// CSS code
+
+// Fonts
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+// Navbar
+.logo {
+    width: 80px;
+    height: auto;
+    margin-right: 15px;
+}
+a.navbar-brand {
+    font-size: 25px;
+}
+nav {
+    font-size: 20px;
+}
+
+// Hero
+.img-hero {
+    height: 673px !important;
+    width: auto !important;
+    border-radius: 28px;
+
+}
+.container-fluid {
+    padding: 0 40px !important;    
+}
+.rounded {
+    border-radius: $border-radius-2xl !important;
+}
+.margin-section {
+    margin-bottom: 100px;
+}
+
+
+// Termine
+

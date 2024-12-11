@@ -1,7 +1,0 @@
-- search a page via url
-- entries in index are links
-- search entry in search bar
-    - try substrings of title
-- create page
-- edit page
-- markdown conversion

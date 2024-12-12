@@ -60,6 +60,28 @@ nav {
 .margin-section {
     margin-bottom: 100px;
 }
+.hero-1{
+    width: 530px;
+}
+.hero{
+    display: flex;
+    flex-wrap: wrap;
+}
+@media (max-width: 1861px) {
+    .hero-2{
+        display: none;
+    }
+}
+
+@media (max-width: 1289px) {
+    .hero-3{
+        display: none;
+    }
+    .hero-2{
+        display: block;
+        
+    }
+}
 
 
 // Termine

@@ -10468,25 +10468,27 @@ nav {
   font-size: 20px; }
 
 .img-hero {
-  height: 673px !important;
-  width: auto !important;
+  width: 100%;
+  height: auto;
   border-radius: 28px; }
-
-.container-fluid, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
-  padding: 0 40px !important; }
 
 .rounded {
   border-radius: 2rem !important; }
 
 .margin-section {
-  margin-bottom: 100px; }
-
-.hero-1 {
-  width: 530px; }
+  margin-bottom: 150px; }
 
 .hero {
   display: flex;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding-top: 10px; }
+
+.hero-1 {
+  width: 530px;
+  height: 319.17;
+  align-self: center; }
 
 @media (max-width: 1861px) {
   .hero-2 {
@@ -10496,7 +10498,31 @@ nav {
     display: none; }
 
   .hero-2 {
-    display: block; } }
+    display: inline; } }
+@media (max-width: 1200px) {
+  .hero {
+    flex-direction: column;
+    gap: 50px; }
+
+  .hero-1 {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column; }
+
+  .hero-1 > a {
+    align-self: flex-start; }
+
+  .hero-2 {
+    width: auto;
+    height: 673px;
+    align-self: center; } }
+@media (max-width: 767.98px) {
+  .termine {
+    display: flex;
+    justify-content: center !important; }
+
+  .card {
+    width: 18rem !important; } }
 .link-none {
   text-decoration: none;
   color: black; }

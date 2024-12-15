@@ -4,6 +4,7 @@ $subtitle: 32px;
 // custom variables
 $primary: #FF8000;
 $h1-font-size: 72px;
+$h2-font-size: 72px;
 
 
 
@@ -113,13 +114,36 @@ nav {
     }
 }
 
+// Über Uns
 
+// Mitglieder
+// .mitglied-img{
+//     // width: 50% !important;
+//     // height: 300px !important;
+//     // object-fit: cover;
+// }
+// .mitglieder{
+//     width: 50% !important;
+    // height: 300px !important;
+    // object-fit: cover;
+// }
 
 // Termine
+.card{
+    width: 18rem;
+}
 @include media-breakpoint-down(md) {
     .termine{
         display: flex;
         justify-content: center !important;
+    }
+    .col{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .card{
+        width: 80%;
     }
 
 }

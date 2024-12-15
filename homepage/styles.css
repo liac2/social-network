@@ -224,10 +224,10 @@ h1, .h1 {
       font-size: 4.5rem; } }
 
 h2, .h2 {
-  font-size: calc(1.325rem + 0.9vw); }
+  font-size: calc(1.575rem + 3.9vw); }
   @media (min-width: 1200px) {
     h2, .h2 {
-      font-size: 2rem; } }
+      font-size: 4.5rem; } }
 
 h3, .h3 {
   font-size: calc(1.3rem + 0.6vw); }
@@ -7019,7 +7019,7 @@ textarea.form-control-lg {
   font-size: calc(1.575rem + 3.9vw) !important; }
 
 .fs-2 {
-  font-size: calc(1.325rem + 0.9vw) !important; }
+  font-size: calc(1.575rem + 3.9vw) !important; }
 
 .fs-3 {
   font-size: calc(1.3rem + 0.6vw) !important; }
@@ -10413,7 +10413,7 @@ textarea.form-control-lg {
     font-size: 4.5rem !important; }
 
   .fs-2 {
-    font-size: 2rem !important; }
+    font-size: 4.5rem !important; }
 
   .fs-3 {
     font-size: 1.75rem !important; }
@@ -10516,13 +10516,21 @@ nav {
     width: auto;
     height: 673px;
     align-self: center; } }
+.card {
+  width: 18rem; }
+
 @media (max-width: 767.98px) {
   .termine {
     display: flex;
     justify-content: center !important; }
 
+  .col {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; }
+
   .card {
-    width: 18rem !important; } }
+    width: 80%; } }
 .link-none {
   text-decoration: none;
   color: black; }

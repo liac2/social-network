@@ -5,6 +5,7 @@ $subtitle: 32px;
 $primary: #FF8000;
 $h1-font-size: 72px;
 $h2-font-size: 72px;
+$h3-font-size: $subtitle;
 
 
 
@@ -58,7 +59,7 @@ nav {
     border-radius: $border-radius-2xl !important;
 }
 .margin-section {
-    margin-bottom: 150px;
+    margin-bottom: 7rem;
 }
 
 .hero{
@@ -115,7 +116,48 @@ nav {
 }
 
 // Über Uns
-
+.wir{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 2rem 3rem 2rem 7rem;
+    gap: 1rem;
+}
+.wir-item-1{
+    max-width: 50rem;
+    flex: 5 1 40rem;
+}
+.wir-item-2{
+    max-width: 40rem;
+    margin: 2rem 4rem;
+    flex: 1 1 25rem;
+}
+@include media-breakpoint-down(xxl) {
+    .wir{
+        flex-direction: column;
+        padding: 2rem;
+    }
+    .wir-item-1{
+        flex-basis: 0;
+    }
+    .wir-item-2{
+        margin: 0;
+        flex-basis: 0;
+        padding: 0 2rem;
+    }
+}
+@include media-breakpoint-down(sm) {
+    .wir{
+        padding: 1rem;
+    }
+    .wir-item-1{
+        flex-basis: 0;
+    }
+    .wir-item-2{
+        padding: 0 1.5rem;
+    }
+}
 // Mitglieder
 // .mitglied-img{
 //     // width: 50% !important;
@@ -129,23 +171,29 @@ nav {
 // }
 
 // Termine
+.termine{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 2rem;
+    gap: 1rem;
+}
 .card{
-    width: 18rem;
+    min-width: 18rem;
+    max-width: 20rem;
+    flex: 1;
 }
 @include media-breakpoint-down(md) {
     .termine{
-        display: flex;
-        justify-content: center !important;
-    }
-    .col{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
     }
     .card{
-        width: 80%;
+        flex: 1;
+        max-width: 27rem;
+        width: 27rem;
     }
-
 }
 
 .link-none {
@@ -160,4 +208,8 @@ nav {
 .icon {
     font-size: 2rem;
 }
+.footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
 
+}

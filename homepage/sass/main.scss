@@ -1,11 +1,12 @@
 // Own variables
-$subtitle: 32px;
+$subtitle: 2rem;
 
 // custom variables
 $primary: #FF8000;
-$h1-font-size: 72px;
-$h2-font-size: 72px;
-$h3-font-size: $subtitle;
+$h1-font-size: 4.5rem;
+$h2-font-size: 4.5rem;
+$h3-font-size: 2.5rem;
+$h4-font-size: $subtitle;
 
 
 
@@ -54,7 +55,11 @@ nav {
 .margin-section {
     margin-bottom: 7rem;
 }
-
+@include media-breakpoint-down(sm) {
+    .margin-section {
+        margin-bottom: 3rem;
+    }
+}
 // Hero
 .hero{
     display: flex;
@@ -68,6 +73,13 @@ nav {
     width: 530px;
     align-self: center;
 }
+// Responsive Button
+@include media-breakpoint-down(md) {
+    .btn-lg{
+        padding: .375rem .75rem;
+        font-size: $font-size-sm;
+    }
+}
 .img-hero {
     width: 100%;
     height: auto;
@@ -75,6 +87,7 @@ nav {
     // width: auto !important;
     border-radius: 28px;
 }
+
 
 // LARGE 
 @media (max-width: 1861px) {
@@ -201,16 +214,33 @@ nav {
 .collage-item-3,
 .collage-item-6{
     width: 90%;
+    align-self: center;
 }
 
 .collage-item-2,
 .collage-item-5{
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
 }
 .collage-img{
     width: 100%;
     height: auto;
     object-fit: cover;
+}
+
+@include media-breakpoint-down(xl) {
+    .collage-item-3,
+    .collage-item-6{
+        width: 90%;
+    }
+
+    .collage-item-2,
+    .collage-item-5{
+        max-width: 33rem;
+    }
 }
 
 @include media-breakpoint-up(xl){
@@ -233,7 +263,7 @@ nav {
     gap: 1rem;
 }
 .card{
-    min-width: 18rem;
+    min-width: 10rem;
     max-width: 20rem;
     flex: 1;
 }
@@ -246,7 +276,7 @@ nav {
     .card{
         flex: 1;
         max-width: 27rem;
-        width: 27rem;
+        width: 100%;
     }
 }
 

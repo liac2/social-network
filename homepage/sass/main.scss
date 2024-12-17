@@ -48,17 +48,6 @@ nav {
 .nav-item{
     padding-left: 1rem;
 }
-
-
-// Hero
-.img-hero {
-    width: 100%;
-    height: auto;
-    // height: 673px !important;
-    // width: auto !important;
-    border-radius: 28px;
-}
-
 .rounded {
     border-radius: $border-radius-2xl !important;
 }
@@ -66,6 +55,7 @@ nav {
     margin-bottom: 7rem;
 }
 
+// Hero
 .hero{
     display: flex;
     flex-wrap: wrap;
@@ -76,10 +66,15 @@ nav {
 }
 .hero-1{
     width: 530px;
-    height: 319.17;
     align-self: center;
 }
-
+.img-hero {
+    width: 100%;
+    height: auto;
+    // height: 673px !important;
+    // width: auto !important;
+    border-radius: 28px;
+}
 
 // LARGE 
 @media (max-width: 1861px) {
@@ -94,30 +89,40 @@ nav {
         display: none;
     }
     .hero-2{
-        display: inline;
+        display: block;
     }
 }
 
 // SMALL
-@media (max-width: 1200px) {
+@media (max-width: 1110px) {
     .hero{
         flex-direction: column;
-        gap: 50px;
+        gap: 2rem;
         align-items: center;
+    }
+    .hero > div{
+        flex: 1;
     }
     .hero-1{
         margin-top: 30px;
-        display: flex;
-        flex-direction: column;
+        width: 100%;
+        max-width: 50rem;
+        align-self: center;
     }
     .hero-1 > a {
-        align-self: flex-start;
+        align-self: start;
     }
     .hero-2{
-        width: 95%;
-        max-width: 523.99px;
-        height: auto;
-        align-self: center;
+        display: none;
+    }
+    // .hero-2{
+    //     width: 95%;
+    //     max-width: 523.99px;
+    //     height: auto;
+    //     align-self: center;
+    // }
+    .hero-3{
+        display: block;
     }
 }
 

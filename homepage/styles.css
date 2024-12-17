@@ -10470,11 +10470,6 @@ nav {
 .nav-item {
   padding-left: 1rem; }
 
-.img-hero {
-  width: 100%;
-  height: auto;
-  border-radius: 28px; }
-
 .rounded {
   border-radius: 2rem !important; }
 
@@ -10490,8 +10485,12 @@ nav {
 
 .hero-1 {
   width: 530px;
-  height: 319.17;
   align-self: center; }
+
+.img-hero {
+  width: 100%;
+  height: auto;
+  border-radius: 28px; }
 
 @media (max-width: 1861px) {
   .hero-2 {
@@ -10501,26 +10500,30 @@ nav {
     display: none; }
 
   .hero-2 {
-    display: inline; } }
-@media (max-width: 1200px) {
+    display: block; } }
+@media (max-width: 1110px) {
   .hero {
     flex-direction: column;
-    gap: 50px;
+    gap: 2rem;
     align-items: center; }
+
+  .hero > div {
+    flex: 1; }
 
   .hero-1 {
     margin-top: 30px;
-    display: flex;
-    flex-direction: column; }
+    width: 100%;
+    max-width: 50rem;
+    align-self: center; }
 
   .hero-1 > a {
-    align-self: flex-start; }
+    align-self: start; }
 
   .hero-2 {
-    width: 95%;
-    max-width: 523.99px;
-    height: auto;
-    align-self: center; } }
+    display: none; }
+
+  .hero-3 {
+    display: block; } }
 .wir {
   display: flex;
   justify-content: center;

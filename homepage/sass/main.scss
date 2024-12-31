@@ -1,8 +1,19 @@
 // Own variables
 $subtitle: 2rem;
 
+$primary: #F66C15;
+$secondary: #30A091;
+$secondary-opt: #5C1C96;
+$tertiary: #A5ADAB;
+$ligth: #F8F8F6;
+$ligth-opt: #EAE5DE;
+$dark: #322A28;
+
+$gradient-1: #FBAA21;
+$gradient-2: #F98822;
+$gradient: linear-gradient(to right, $gradient-1, $gradient-2, $primary);
+
 // custom variables
-$primary: #FF8000;
 $h1-font-size: 4.5rem;
 $h2-font-size: 4.5rem;
 $h3-font-size: 2.5rem;
@@ -33,6 +44,21 @@ $theme-colors: map-merge($custom-theme-colors, $theme-colors);
 body {
     font-family: 'Inter', sans-serif;
 }
+
+// Sections background 
+main > :nth-child(even){
+    background-color: $ligth;
+}
+// nav{
+//     background-image: $ligth;
+// }
+main > :nth-child(1){
+    background-image: $gradient;
+}
+
+
+
+
 
 // Navbar
 .logo {
@@ -145,7 +171,7 @@ nav {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    padding: 2rem 3rem 2rem 7rem;
+    padding: 1.5rem 3rem 1.5rem 7rem;
     gap: 1rem;
 }
 .wir-item-1{
@@ -160,7 +186,7 @@ nav {
 @include media-breakpoint-down(xxl) {
     .wir{
         flex-direction: column;
-        padding: 2rem;
+        padding: 1.5rem 2rem;
     }
     .wir-item-1{
         flex-basis: 0;
@@ -173,7 +199,7 @@ nav {
 }
 @include media-breakpoint-down(sm) {
     .wir{
-        padding: 1rem;
+        padding: 1.5rem 1rem;
     }
     .wir-item-1{
         flex-basis: 0;
@@ -296,4 +322,17 @@ nav {
     padding-left: 1rem;
     padding-right: 1rem;
 
+}
+
+
+// Sections padding
+main > div{
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+}
+main > :last-child{
+    padding-bottom: 24px;
+}
+.footer{
+    margin-top: 0 !important;
 }

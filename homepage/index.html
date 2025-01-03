@@ -14,14 +14,14 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-        <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/font-awesome-solid/512/record-vinyl-256.png">
+        <link rel="icon" type="image/png" href="source/vinyl-fill.png">
 
         <!-- Irish Grover Metal Mania -->
         <link href="https://fonts.googleapis.com/css2?family=Irish+Grover&family=Metal+Mania&display=swap" rel="stylesheet">
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-expand-lg">
+            <nav class="navbar nav-underline navbar-expand-lg">
                 <div class="container-fluid">
                   <a class="navbar-brand" id="banderos" href="index.html">
                     <img src="source/Band.png" alt="Logo" width="30" height="24" class="logo d-inline-block align-text-center">
@@ -38,10 +38,10 @@
                         <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="termine.html">Termine</a>
+                        <a class="nav-link" href="termine.html">Termine</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link active" href="ueber_uns.html">Über Uns</a>
+                        <a class="nav-link" href="ueber_uns.html">Über Uns</a>
                       </li>
                     </ul>
                   </div>
@@ -49,9 +49,14 @@
               </nav>
         </header>
         <main>
+          <div class="justify-content-center">
+            <i class="bi fs-1 bi-star-fill"></i>
+            <i class="bi fs-1 bi-music-note"></i>
+
+          </div>
           <div class="container-fluid hero">
             <div class="hero-1">
-              <h1 class="">
+              <h1 class="display-1">
                 Erlebe authentischen 
                 <strong class="fw-semibold">
                   Rock’n’Roll
@@ -121,33 +126,70 @@
             </div>
           </div>
 
-          <!-- Mitglieder
-          <div class="container margin-section">
-            <h2 class="mb-5 text-center">
-              Erlebe uns live!
-            </h2>
-            <div class="card mitglieder text-bg-dark">
-              <img src="source/mitglieder/Alfred.jpg" class="card-img mitglied-img" alt="Alfred Foto">
-              <div class="card-img-overlay">
-                <h5 class="card-title">Alfred</h5>
-                <p class="card-text">This content is a little bit longer.</p>
-                <p class="card-text"><small>Last updated 3 mins ago</small></p>
+
+          <!-- Mitglieder -->
+          <div class="container-fluid mitglieder">
+            <div class="carousel-container">
+              <div id="carouselExampleCaptions" class="carousel slide">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner rounded-5 shadow-lg">
+                  <div class="carousel-item active">
+                    <img src="source/mitglieder/Alfred.jpg" class="d-block w-100" alt="Bild Alfred">
+                    <div class="carousel-caption d-none d-md-block">
+                      <div class="caption rounded-3">
+                        <h5 class="h3">Alfred</h5>
+                        <p class="fs-5 fw-semibold">Some representative placeholder content for the third slide.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="source/mitglieder/Kathi.jpg" class="d-block w-100" alt="Bild Kathi">
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5 class="h3">Kathi</h5>
+                      <p class="fs-5 fw-semibold">Some representative placeholder content for the second slide.</p>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="source/mitglieder/Lena.jpg" class="d-block w-100" alt="Bild Lena">
+                    <div class="carousel-caption d-none d-md-block">
+                      <div class="caption">
+                        <h5 class="h3">Lena</h5>
+                        <p class="fs-5 fw-semibold">Some representative placeholder content for the third slide.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
               </div>
             </div>
           </div>
-           -->
+         
           
 
           <!-- Termine -->
           <!-- For respnsive design: https://getbootstrap.com/docs/5.3/components/card/#horizontal -->
-          <div class="container-fluid" id="termine">
-            <h2 class="mb-4 h2 text-center">
-              Erlebe uns live!
-            </h2>
+          <div class="container-fluid mt-4 mb-4" id="termine">
+            <div class="h2 text-center">
+              <h3 class="h2 d-inline fw-normal text-center">
+                Erlebe uns live!
+              </h3>
+              <i class="bi bi-music-note-beamed"></i>
+            </div>
             
             <!-- Cards -->
             <div class="termine">
-                <a class="link-none card text-bg-light" href="https://www.facebook.com/p/Los-Banderos-Viva-La-Rock-n-Roll-61556007302974/"> 
+                <a class="link-none card" href="https://www.facebook.com/p/Los-Banderos-Viva-La-Rock-n-Roll-61556007302974/"> 
                   <img src="source/index/plakat.png" class="card-img-top" alt="Plakat">
                   <div class="card-body">
                     <h4 class="card-title">Saschas Artzone</h4>
@@ -158,21 +200,54 @@
                     <li class="list-group-item">Ort:</li>
                   </ul>
                 </a>
-                <a class="link-none card text-bg-light" href="https://www.facebook.com/p/Los-Banderos-Viva-La-Rock-n-Roll-61556007302974/"> 
+                <a class="link-none card" href="https://www.facebook.com/p/Los-Banderos-Viva-La-Rock-n-Roll-61556007302974/"> 
                   <img src="source/index/plakat.png" class="card-img-top" alt="Plakat">
                   <div class="card-body">
-                    <h4 class="card-title">Saschas Artzone</h4>
+                    <h4 class="card-title termine-title">Saschas Artzone</h4>
                     <p class="card-text">Ein live Konzert in Saschas Artzone!</p>
                   </div>
                   <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Datum</li>
-                    <li class="list-group-item">Ort:</li>
+                    <li class="list-group-item"><i class="bi bi-calendar-event"></i> 
+                      <strong>
+                        15.3.2025
+                      </strong></li>
+                    <li class="list-group-item">
+                      <i class="bi bi-geo-alt-fill"></i>
+                      <strong>
+                        Venusbergerstraße 18
+                      </strong>
+                    </li>
+                    <li class="list-group-item">
+                      <i class="bi bi-tag-fill"></i>
+                      <strong>
+                        18€
+                      </strong>
+                    </li>
                   </ul>
                 </a>
               
             </div>
 
           </div> 
+          <div class="container-fluid">
+            <div class="px-4 py-5 my-5 text-center">
+              <div class="container py-5 border shadow rounded-3">
+                <img src="source/Band.png" alt="Logo" class="logo-social d-inline-block align-text-center">
+                <h1 class="h2 mb-0 fw-normal text-body-emphasis">Social Media</h1>
+                <div class="col-lg-6 mx-auto">
+                  <p class="lead mb-3">Verfolge uns auf Social Media!</p>
+                  <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <button type="button" class="btn btn-primary text-white fw-semibold btn-lg px-4 gap-3">
+                      <i class="bi bi-youtube"></i>
+                      YouTube</button>
+                    <button type="button" class="btn btn-outline-secondary fw-semibold btn-lg px-4">
+                      <i class="bi bi-facebook"></i>
+                      Facebook</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </main>
 
         <footer class="footer d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
@@ -186,12 +261,12 @@
             </a></li>
           </ul>
       
-          <a href="index.html" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+          <!-- <a href="index.html" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
             <img src="source/Band.png" alt="Logo" width="30" height="24" class="logo d-inline-block align-text-center">
-          </a>
+          </a> -->
       
           <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item"><a href="index.html" class="nav-link px-2 text-body-secondary">Home</a></li>
+            <li class="nav-item"><a href="#top" class="nav-link px-2 text-body-secondary">Home</a></li>
             <li class="nav-item"><a href="#termine" class="nav-link px-2 text-body-secondary">Termine</a></li>
             <li class="nav-item"><a href="ueber_uns.html" class="nav-link px-2 text-body-secondary">Über Uns</a></li>
           </ul>

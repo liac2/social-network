@@ -2,9 +2,9 @@
 $subtitle: 2rem;
 
 $primary: #F66C15;
-$secondary: #30A091;
+$secondary-custom: #30A091;
 $secondary-opt: #5C1C96;
-$tertiary: #A5ADAB;
+$tertiary-custom: #A5ADAB;
 $ligth: #F8F8F6;
 $ligth-opt: #EAE5DE;
 $dark: #322A28;
@@ -13,12 +13,14 @@ $gradient-1: #FBAA21;
 $gradient-2: #F98822;
 $gradient: linear-gradient(to right, $gradient-1, $gradient-2, $primary);
 
+
 // custom variables
-$h1-font-size: 4.5rem;
+    // Headings
+// $h1-font-size: 5rem;
 $h2-font-size: 4.5rem;
 $h3-font-size: 2.5rem;
-$h4-font-size: $subtitle;
 
+$headings-font-family: 'Berlin Sans FB', sans-serif;
 
 
 // import functions & variables
@@ -50,25 +52,22 @@ main > :nth-child(even){
     background-color: $ligth;
 }
 
-h1{
-    font-family: 'Berlin Sans FB', sans-serif;
-    font-size: 5rem;
-    font-weight: 400;
-}
-h2{
-    font-family: 'Berlin Sans FB', sans-serif;
-}
-// strong{
-//     font-family: 'Irish Grover', sans-serif;
-//     font-size: 5rem;
-//     font-weight: 400;
-
-// }
-
-
-
 
 // Navbar
+.navbar-nav {
+    .nav-link {
+        transition: color 0.3s;
+
+        &:hover {
+            color: $primary;
+        }
+
+        &.active {
+        color: $primary;
+        font-weight: bold;
+        }
+    }
+}
 .logo {
     width: 80px;
     height: auto;
@@ -179,7 +178,7 @@ nav {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    padding: 1.5rem 3rem 1.5rem 7rem;
+    padding: 0rem 3rem 0rem 7rem;
     gap: 1rem;
 }
 .wir-item-1{
@@ -194,7 +193,7 @@ nav {
 @include media-breakpoint-down(xxl) {
     .wir{
         flex-direction: column;
-        padding: 1.5rem 2rem;
+        padding: 0 1.5rem;
     }
     .wir-item-1{
         flex-basis: 0;
@@ -205,9 +204,14 @@ nav {
         padding: 0 2rem;
     }
 }
+@include media-breakpoint-down(md) {
+    .wir{
+        padding: 0 0.5rem;
+    }
+}
 @include media-breakpoint-down(sm) {
     .wir{
-        padding: 1.5rem 1rem;
+        padding: 0;
     }
     .wir-item-1{
         flex-basis: 0;
@@ -216,17 +220,7 @@ nav {
         padding: 0 1.5rem;
     }
 }
-// Mitglieder
-// .mitglied-img{
-//     // width: 50% !important;
-//     // height: 300px !important;
-//     // object-fit: cover;
-// }
-// .mitglieder{
-//     width: 50% !important;
-    // height: 300px !important;
-    // object-fit: cover;
-// }
+
 
 // Was uns ausmacht
 .collage{
@@ -288,6 +282,29 @@ nav {
     }
 }
 
+// Mitglieder Carousel
+.mitglieder{
+    display: flex;
+    justify-content: center;
+}
+.carousel-container{
+    max-width: 67rem;
+    padding: 0 3rem;
+}
+@include media-breakpoint-down(md) {
+    .carousel-container{
+        padding: 0 1rem;
+    }
+}
+@include media-breakpoint-down(sm) {
+    .carousel-container{
+        padding: 0;
+    }
+}
+
+
+
+
 // Termine
 .termine{
     display: flex;
@@ -301,6 +318,12 @@ nav {
     max-width: 20rem;
     flex: 1;
 }
+.termine-title{
+    display: inline;
+}
+
+
+
 a[class~="card"]{
     text-decoration: none;
     color: black;
@@ -357,4 +380,10 @@ main > :last-child{
 }
 .footer{
     margin-top: 0 !important;
+}
+
+// Social Meida
+.logo-social{
+    width: 150px;
+    height: auto;
 }

@@ -10637,6 +10637,19 @@ nav {
   display: flex;
   justify-content: center; }
 
+.carousel-item img {
+  object-fit: cover; }
+
+.caption > h5, .caption > .h5,
+.caption > p {
+  color: white;
+  text-shadow: 2px 2px 4px black; }
+
+.caption > p {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  padding: 10px; }
+
 .carousel-container {
   max-width: 67rem;
   padding: 0 3rem; }

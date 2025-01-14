@@ -1,8 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+
+import json
 
 from .models import User
 
@@ -10,9 +14,13 @@ from .models import User
 def index(request):
     return render(request, "network/index.html")
 
-
+@login_required
 def post(request):
-    pass
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    
+    data = json.loads(request.body)
+    post = data.get('post')
 
 def login_view(request):
     if request.method == "POST":

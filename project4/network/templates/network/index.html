@@ -1,5 +1,12 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    <div class="container p-4 bg-body-tertiary border rounded-3">
+        <h1 class="text-center mb-3">New Post</h1>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Create a post" id="new_post_input"></textarea>
+            <label for="new_post_input">Create a Post</label>
+            <button type="submit" id="post_btn" class="btn btn-primary mt-2">Post</button>
+        </div>
+    </div>
 {% endblock %}

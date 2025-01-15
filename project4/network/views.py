@@ -18,25 +18,29 @@ def index(request):
 @csrf_exempt
 @login_required
 def post(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "POST request required."}, status=400)
-    
-    # Get User and text of post
-    data = json.loads(request.body)
-    text = data.get('text')
-    if text == "":
-        return JsonResponse({
-            "error": "Empty Post not allowed."
-        }, status=400)
-    user = request.user
+    if request.method == "POST":
 
-    # Save post to db
-    post = Post(
-        user=user,
-        text=text
-    )
-    post.save()
-    return JsonResponse({"message": "Posted successfully."}, status=201)
+        # Get User and text of post
+        data = json.loads(request.body)
+        text = data.get('text')
+        if text == "":
+            return JsonResponse({
+                "error": "Empty Post not allowed."
+            }, status=400)
+        user = request.user
+
+        # Save post to db
+        post = Post(
+            user=user,
+            text=text
+        )
+        post.save()
+        return JsonResponse({"message": "Posted successfully."}, status=201)
+    
+    else:
+        posts = Post.objects.order_by("-time").all()
+        return JsonResponse([post.serialize() for post in posts], safe=False)
+
 
 def login_view(request):
     if request.method == "POST":

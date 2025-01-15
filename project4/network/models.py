@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import datetime
 
 
 class User(AbstractUser):
@@ -8,3 +9,4 @@ class User(AbstractUser):
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     text = models.CharField(max_length=30)
+    time = models.DateTimeField(auto_now_add=True)

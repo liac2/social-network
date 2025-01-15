@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/post')
     .then(response => response.json())
     .then(posts => {
-        console.log(posts);
+        for post in posts
 
     });
 });

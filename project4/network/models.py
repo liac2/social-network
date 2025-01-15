@@ -6,4 +6,5 @@ class User(AbstractUser):
     pass
 
 class Post(models.Model):
-    text = models.
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
+    text = models.CharField(max_length=30)

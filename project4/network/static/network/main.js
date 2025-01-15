@@ -1,3 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('loaded');
+
+    // Create Post
+    document.querySelector('#post_btn').onclick = (event) => {
+        const text = querySelector('#new_post_input').value
+        
+
+    };
 });

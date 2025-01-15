@@ -15,6 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(result);
             input.value = '';
         });
-
     };
+
+    // All Posts
+    let view = document.querySelector('.posts-view');
+    fetch('/post')
+    .then(response => response.json())
+    .then(posts => {
+        console.log(posts);
+
+    });
 });

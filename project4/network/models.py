@@ -1,12 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 import datetime
-
+from django.utils.timezone import now
 
 class User(AbstractUser):
     pass
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
-    text = models.CharField(max_length=30)
+    text = models.CharField(max_length=300)
     time = models.DateTimeField(auto_now_add=True)
+    likes = models.PositiveIntegerField(default=0)

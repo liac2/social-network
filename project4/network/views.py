@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import json
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
@@ -21,8 +21,22 @@ def post(request):
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
     
+    # Get User and text of post
     data = json.loads(request.body)
-    post = data.get('post')
+    text = data.get('text')
+    if text == "":
+        return JsonResponse({
+            "error": "Empty Post not allowed."
+        }, status=400)
+    user = request.user
+
+    # Save post to db
+    post = Post(
+        user=user,
+        text=text
+    )
+    post.save()
+    return JsonResponse({"message": "Posted successfully."}, status=201)
 
 def login_view(request):
     if request.method == "POST":

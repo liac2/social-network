@@ -11,16 +11,12 @@ import json
 
 from .models import User, Post
 
-# TODO: 
-# in js 45 show profile page
-
 def index(request):
     return render(request, "network/index.html")
 
 @csrf_exempt
-@login_required
 def post(request):
-    if request.method == "POST":
+    if request.method == "POST" and request.user.is_authenticated:
 
         # Get User and text of post
         data = json.loads(request.body)
@@ -42,6 +38,24 @@ def post(request):
     else:
         posts = Post.objects.order_by("-time").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
+
+@csrf_exempt
+def profile(request, id):
+    creator = Post.objects.get(pk=id).user
+    posts = creator.posts.order_by("-time").all()
+    viewer = request.user
+    
+    return JsonResponse({
+        'following': creator.following.count(),
+        'followers': creator.followers.count(),
+        'posts': [post.serialize() for post in posts],
+        'email': creator.email,
+        'viewer': {
+            'email': request.user.email if viewer.is_authenticated else '',
+            'authenticated': viewer.is_authenticated,
+            'following': creator in viewer.following.all()
+        }
+    })
 
 
 def login_view(request):

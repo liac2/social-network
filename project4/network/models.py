@@ -4,7 +4,7 @@ import datetime
 from django.utils.timezone import now
 
 class User(AbstractUser):
-    pass
+    following = models.ManyToManyField("User", related_name="followers")
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")

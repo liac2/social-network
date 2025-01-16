@@ -11,6 +11,8 @@ import json
 
 from .models import User, Post
 
+# TODO: 
+# in js 45 show profile page
 
 def index(request):
     return render(request, "network/index.html")

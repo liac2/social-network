@@ -1,14 +1,47 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import User
+import json
 
+from .models import User, Post
+
+# TODO: 
+# in js 45 show profile page
 
 def index(request):
     return render(request, "network/index.html")
+
+@csrf_exempt
+@login_required
+def post(request):
+    if request.method == "POST":
+
+        # Get User and text of post
+        data = json.loads(request.body)
+        text = data.get('text')
+        if text == "":
+            return JsonResponse({
+                "error": "Empty Post not allowed."
+            }, status=400)
+        user = request.user
+
+        # Save post to db
+        post = Post(
+            user=user,
+            text=text
+        )
+        post.save()
+        return JsonResponse({"message": "Posted successfully."}, status=201)
+    
+    else:
+        posts = Post.objects.order_by("-time").all()
+        return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
 def login_view(request):

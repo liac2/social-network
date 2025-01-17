@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const body = document.querySelector('.body');
-
     const section = document.querySelector('#new_post_div');
+    let view = document.querySelector('.posts-view');
+
 
     // Create Post
     const btn = document.querySelector('#post_btn');
@@ -20,41 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(result => {
                 console.log(result);
                 input.value = '';
-            });
+            })
+            .then(() => all_posts(section, view, body));
         };
     }
     
 
-    // All Posts
-    let view = document.querySelector('.posts-view');
-    fetch('/post')
-    .then(response => response.json())
-    .then(posts => {
-
-        // List all posts
-        for (let data of posts) {
-            let post = document.createElement('div');
-            post.className = 'list-group-item list-group-item-action list-group-item-light bg-light';
-            post.ariaCurrent = 'true';
-
-            post.innerHTML = `<div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">${data.creator}</h5>
-            <small>${data.time}</small>
-            </div>
-            <p class="mb-1">${data.text}</p>
-            <p class="mb-1">${data.likes}</p>`;
-
-            // Portfolio page
-            const h5 = post.querySelector('h5');
-            h5.onclick = profile(element, data);
-
-            view.append(post);
-        }
-
-    });
+    // All Posts by default
+    all_posts(section, view, body);
 });
 
-function profile (element, data) {
+function profile (data, section, view, body) {
 
     // Hide old page
     if (section !== null) {
@@ -71,11 +48,11 @@ function profile (element, data) {
         let follow_btn = '';
 
         // Check if viewer can follow
-        if (d.viewer.authenticated && d.viewer.email !== d.email) {
+        if (d.viewer.authenticated && d.viewer.email !== d.email) { 
             if (d.viewer.following) {
-                follow_btn = '<button data-follow="follow" class="btn-primary btn">Follow</button>';
-            } else {
                 follow_btn = '<button data-follow="unfollow" class="btn-primary btn">Unfollow</button>';
+            } else {
+                follow_btn = '<button data-follow="follow" class="btn-primary btn">Follow</button>';
             }
         }
 
@@ -91,9 +68,20 @@ function profile (element, data) {
         
         // Follow btn logic
         if (d.viewer.authenticated && d.viewer.email !== d.email) {
-            page.querySelector('button').onclick = (element) => {
+            page.querySelector('button').onclick = () => {
                 
                 // Follow / Unfollow creator
+                follow_btn = page.querySelector('button');
+                let follow = false;
+                if (follow_btn.dataset.follow === 'follow') {
+                    follow = true;
+                }
+                fetch(`/profile${data.id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        following: follow
+                    })
+                });
             };
         }
         
@@ -117,5 +105,34 @@ function profile (element, data) {
 
         // Append profile page to dom
         body.append(page);
+    });
+}
+
+function all_posts (section, view, body) {
+    view.innerHTML = '';
+    fetch('/post')
+    .then(response => response.json())
+    .then(posts => {
+
+        // List all posts
+        for (let data of posts) {
+            let post = document.createElement('div');
+            post.className = 'list-group-item list-group-item-action list-group-item-light bg-light';
+            post.ariaCurrent = 'true';
+
+            post.innerHTML = `<div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">${data.creator}</h5>
+            <small>${data.time}</small>
+            </div>
+            <p class="mb-1">${data.text}</p>
+            <p class="mb-1">${data.likes}</p>`;
+
+            // Portfolio page
+            const h5 = post.querySelector('h5');
+            h5.onclick = () => profile(data, section, view, body);
+
+            view.append(post);
+        }
+
     });
 }

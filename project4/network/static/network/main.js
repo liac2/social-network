@@ -22,14 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(result);
                 input.value = '';
             })
-            .then(() => all_posts(section, view, body));
+            .then(() => all_posts(section, view, body, 'all'));
         };
     }
     
 
     // All Posts by default
     if (view !== null) {
-        all_posts(section, view, body);
+        all_posts(section, view, body, 'all');
     }
 });
 
@@ -128,9 +128,9 @@ function profile (data, section, view, body) {
     });
 }
 
-function all_posts (section, view, body) {
+function all_posts (section, view, body, type) {
     view.innerHTML = '';
-    fetch('/post')
+    fetch(`/post${type}`)
     .then(response => response.json())
     .then(posts => {
 

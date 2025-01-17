@@ -15,7 +15,7 @@ def index(request):
     return render(request, "network/index.html")
 
 @csrf_exempt
-def post(request):
+def post(request, type):
     if request.method == "POST" and request.user.is_authenticated:
 
         # Get User and text of post
@@ -36,8 +36,15 @@ def post(request):
         return JsonResponse({"message": "Posted successfully."}, status=201)
     
     else:
-        posts = Post.objects.order_by("-time").all()
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        if type == 'all':
+            posts = Post.objects.order_by("-time").all()
+            return JsonResponse([post.serialize() for post in posts], safe=False)
+        elif type == 'following':
+            # TODO
+            request.user.following.all()
+            posts = Post.objects.order_by("-time").all()
+            return JsonResponse([post.serialize() for post in posts], safe=False)
+        
 
 @csrf_exempt
 def profile(request, id):

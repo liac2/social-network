@@ -28,7 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     // All Posts by default
-    all_posts(section, view, body);
+    if (view !== null) {
+        all_posts(section, view, body);
+    }
 });
 
 function profile (data, section, view, body) {
@@ -48,7 +50,7 @@ function profile (data, section, view, body) {
         let follow_btn = '';
 
         // Check if viewer can follow
-        if (d.viewer.authenticated && d.viewer.email !== d.email) { 
+        if (d.viewer.authenticated && d.viewer.email !== d.email) {
             if (d.viewer.following) {
                 follow_btn = '<button data-follow="unfollow" class="btn-primary btn">Unfollow</button>';
             } else {
@@ -59,7 +61,7 @@ function profile (data, section, view, body) {
         // Display profile
         const page = document.querySelector('#profile');
         page.innerHTML = `<h1>${data.creator}</h1>
-            <p>Followers: ${d.followers}</p>
+            <p id="followers">Followers: ${d.followers}</p>
             <p>Following: ${d.following}</p>
             ${follow_btn}
             <hr>
@@ -68,20 +70,38 @@ function profile (data, section, view, body) {
         
         // Follow btn logic
         if (d.viewer.authenticated && d.viewer.email !== d.email) {
-            page.querySelector('button').onclick = () => {
+            page.querySelector('button').onclick = (event) => {
                 
                 // Follow / Unfollow creator
-                follow_btn = page.querySelector('button');
+                let element = event.target;
                 let follow = false;
-                if (follow_btn.dataset.follow === 'follow') {
+                if (element.dataset.follow === 'follow') {
                     follow = true;
                 }
+
+                // Send data to db
                 fetch(`/profile${data.id}`, {
                     method: 'PUT',
                     body: JSON.stringify({
                         following: follow
                     })
                 });
+
+                // Edit data page displays
+                let followers_p = page.querySelector('#followers');
+                let text = followers_p.innerHTML.split(' ');
+                let followers_count = parseInt(text[1]);
+                let count = 0;
+                if (follow) {
+                    element.dataset.follow = 'unfollow';
+                    element.innerHTML = 'Unfollow';
+                    count++;
+                } else {
+                    element.dataset.follow = 'follow';
+                    element.innerHTML = 'Follow';
+                    count--;
+                }
+                followers_p.innerHTML = `${text[0]} ${followers_count + count}`;
             };
         }
         

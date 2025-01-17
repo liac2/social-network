@@ -41,21 +41,46 @@ def post(request):
 
 @csrf_exempt
 def profile(request, id):
-    creator = Post.objects.get(pk=id).user
-    posts = creator.posts.order_by("-time").all()
-    viewer = request.user
-    
-    return JsonResponse({
-        'following': creator.following.count(),
-        'followers': creator.followers.count(),
-        'posts': [post.serialize() for post in posts],
-        'email': creator.email,
-        'viewer': {
-            'email': request.user.email if viewer.is_authenticated else '',
-            'authenticated': viewer.is_authenticated,
-            'following': creator in viewer.following.all()
-        }
-    })
+
+    # Return profile page
+    if request.method == "GET":
+        creator = Post.objects.get(pk=id).user
+        posts = creator.posts.order_by("-time").all()
+        viewer = request.user
+        
+        return JsonResponse({
+            'following': creator.following.count(),
+            'followers': creator.followers.count(),
+            'posts': [post.serialize() for post in posts],
+            'email': creator.email,
+            'viewer': {
+                'email': request.user.email if viewer.is_authenticated else '',
+                'authenticated': viewer.is_authenticated,
+                'following': creator in viewer.following.all() if viewer.is_authenticated else ''
+            }
+        })
+
+    # Update whether user follows or unfollows
+    elif request.method == "PUT":
+        creator = Post.objects.get(pk=id).user
+        viewer = request.user
+        data = json.loads(request.body)
+
+        # Follow
+        if data.get("following"):
+            viewer.following.add(creator)
+
+        # Unfollow
+        else:
+            viewer.following.remove(creator)
+            
+        viewer.save()
+        return HttpResponse(status=204)
+
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
 
 
 def login_view(request):

@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 import json
 
@@ -15,7 +16,7 @@ def index(request):
     return render(request, "network/index.html")
 
 @csrf_exempt
-def post(request, type):
+def post(request):
     if request.method == "POST" and request.user.is_authenticated:
 
         # Get User and text of post
@@ -36,29 +37,54 @@ def post(request, type):
         return JsonResponse({"message": "Posted successfully."}, status=201)
     
     else:
+        type = request.GET.get('type')
+        page_number = request.GET.get('page')
         if type == 'all':
             posts = Post.objects.order_by("-time").all()
-            return JsonResponse([post.serialize() for post in posts], safe=False)
-        elif type == 'following':
-            # TODO
-            request.user.following.all()
-            posts = Post.objects.order_by("-time").all()
-            return JsonResponse([post.serialize() for post in posts], safe=False)
+            paginator = Paginator(posts, 10)
+            page_obj = paginator.get_page(page_number)
+
+        elif type == 'following' and request.user.is_authenticated:
+            following_users = request.user.following.all()
+            posts = Post.objects.filter(user__in=following_users).order_by('-time')
+            paginator = Paginator(posts, 10)
+            page_obj = paginator.get_page(page_number)
+        
+        response = {
+            'posts': [post.serialize() for post in page_obj],
+            'pagination': {
+                'has_next': page_obj.has_next(),
+                'has_previous': page_obj.has_previous(),
+                'num_pages': list(page_obj.paginator.page_range),
+                'current': page_obj.number,
+            }
+        }
+        return JsonResponse(response, safe=False)
         
 
 @csrf_exempt
-def profile(request, id):
+def profile(request):
 
     # Return profile page
     if request.method == "GET":
+        id = request.GET.get('id')
+        page_number = request.GET.get('page')
         creator = Post.objects.get(pk=id).user
         posts = creator.posts.order_by("-time").all()
+        paginator = Paginator(posts, 10)
+        page_obj = paginator.get_page(page_number)
         viewer = request.user
         
         return JsonResponse({
             'following': creator.following.count(),
             'followers': creator.followers.count(),
-            'posts': [post.serialize() for post in posts],
+            'posts': [post.serialize() for post in page_obj],
+            'pagination': {
+                'has_next': page_obj.has_next(),
+                'has_previous': page_obj.has_previous(),
+                'num_pages': list(page_obj.paginator.page_range),
+                'current': page_obj.number,
+            },
             'email': creator.email,
             'viewer': {
                 'email': request.user.email if viewer.is_authenticated else '',
@@ -69,6 +95,7 @@ def profile(request, id):
 
     # Update whether user follows or unfollows
     elif request.method == "PUT":
+        id = request.GET.get('id')
         creator = Post.objects.get(pk=id).user
         viewer = request.user
         data = json.loads(request.body)

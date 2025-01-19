@@ -1,13 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const body = document.querySelector('.body');
-    const section = document.querySelector('#new_post_div');
-    let view = document.querySelector('.posts-view');
-
+    window.body = document.querySelector('.body');
+    window.section = document.querySelector('#new_post_div');
+    window.own_view_btn = document.querySelector('#following_view_btn');
+    window.view = document.querySelector('.posts-view');
+    window.view_btn = document.querySelector('#all_posts_view_btn');
+    window.profile_view = document.querySelector('#profile');
 
     // Create Post
     const btn = document.querySelector('#post_btn');
-    if (btn !== null) {
+    if (btn) {
         btn.onclick = (event) => {
             let input = document.querySelector('#new_post_input');
             const text = input.value;
@@ -22,27 +24,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(result);
                 input.value = '';
             })
-            .then(() => all_posts(section, view, body, 'all'));
+            .then(() => all_posts('all', 1));
         };
     }
-    
 
-    // All Posts by default
-    if (view !== null) {
-        all_posts(section, view, body, 'all');
+    // Following view
+    if (own_view_btn) {
+        own_view_btn.onclick = (event) => {
+            event.preventDefault();
+            all_posts('following', 1)
+        };
+    }
+
+    // All Posts
+    if (view && view_btn) {
+        all_posts('all', 1);
+        view_btn.onclick = (event) => {
+            event.preventDefault();
+            all_posts('all', 1);
+        } 
     }
 });
 
-function profile (data, section, view, body) {
+function profile (data, page) {
 
     // Hide old page
-    if (section !== null) {
-        section.style.display = 'none';
+    if (window.section !== null) {
+        window.section.style.display = 'none';
     }
-    view.style.display = 'none';
+    window.view.style.display = 'none';
+
+    window.profile_view.innerHTML = '';
+    window.profile_view.style.display = 'block';
 
     // Get data for user
-    fetch(`/profile${data.id}`)
+    fetch(`/profile?id=${data.id}&page=${page}`)
     .then(response => response.json())
     .then(d => {
         
@@ -60,7 +76,7 @@ function profile (data, section, view, body) {
 
         // Display profile
         const page = document.querySelector('#profile');
-        page.innerHTML = `<h1>${data.creator}</h1>
+        page.innerHTML = `<h1>${d.email}</h1>
             <p id="followers">Followers: ${d.followers}</p>
             <p>Following: ${d.following}</p>
             ${follow_btn}
@@ -80,7 +96,7 @@ function profile (data, section, view, body) {
                 }
 
                 // Send data to db
-                fetch(`/profile${data.id}`, {
+                fetch(`/profile?id=${data.id}`, {
                     method: 'PUT',
                     body: JSON.stringify({
                         following: follow
@@ -123,18 +139,29 @@ function profile (data, section, view, body) {
             profile_posts_div.append(entry);
         }
 
+        // Add pagination
+        pagination(d.pagination, 'profile');
+
         // Append profile page to dom
-        body.append(page);
+        window.body.append(page);
     });
 }
 
-function all_posts (section, view, body, type) {
-    view.innerHTML = '';
-    fetch(`/post${type}`)
+function all_posts (type, page) {
+
+    // Setup page
+    window.section && (window.section.style.display = 'block');
+    window.view && ((window.view.style.display = 'block'), (window.view.innerHTML = ''));
+    window.profile_view && (window.profile_view.innerHTML = '');
+
+
+    fetch(`/post?type=${type}&page=${page}`)
     .then(response => response.json())
-    .then(posts => {
+    .then(posts_data => {
+        console.log(posts_data);
 
         // List all posts
+        let posts = posts_data.posts
         for (let data of posts) {
             let post = document.createElement('div');
             post.className = 'list-group-item list-group-item-action list-group-item-light bg-light';
@@ -149,10 +176,16 @@ function all_posts (section, view, body, type) {
 
             // Portfolio page
             const h5 = post.querySelector('h5');
-            h5.onclick = () => profile(data, section, view, body);
+            h5.onclick = () => profile(data, 1);
 
-            view.append(post);
+            if (window.view) {
+                window.view.append(post);
+            } else {
+                console.error('window.view ist undefined.');
+            }
         }
+        pagination(posts_data.pagination, type);
 
     });
 }
+

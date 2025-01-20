@@ -36,6 +36,18 @@ def post(request):
         post.save()
         return JsonResponse({"message": "Posted successfully."}, status=201)
     
+    # Update text of post
+    elif request.method == "PUT" and request.user.is_authenticated:
+        data = json.loads(request.body)
+        id = data.get('id')
+        post = Post.objects.get(pk=id)
+        if request.user != post.user:
+            return HttpResponse(status=403)
+        text = data.get('text')
+        post.text = text
+        post.save()
+        return HttpResponse(status=204)
+        
     else:
         type = request.GET.get('type')
         page_number = request.GET.get('page')
@@ -57,7 +69,11 @@ def post(request):
                 'has_previous': page_obj.has_previous(),
                 'num_pages': list(page_obj.paginator.page_range),
                 'current': page_obj.number,
-            }
+            },
+            'viewer': {
+                'email': request.user.email if request.user.is_authenticated else '',
+                'authenticated': request.user.is_authenticated,
+            },
         }
         return JsonResponse(response, safe=False)
         

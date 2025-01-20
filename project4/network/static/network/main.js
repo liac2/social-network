@@ -171,8 +171,57 @@ function all_posts (type, page) {
             <h5 class="mb-1">${data.creator}</h5>
             <small>${data.time}</small>
             </div>
-            <p class="mb-1">${data.text}</p>
-            <p class="mb-1">${data.likes}</p>`;
+            
+            
+            <p class="mb-1 text">${data.text}</p>
+            <div class="row justify-content-between">
+                <div class="col-md-auto">
+                    <p class="mb-1">${data.likes}</p>
+
+                </div>
+                <div class="col-md-auto">
+                    <button data-type="edit" class="edit_btn btn btn-outline-primary">
+                        <i class="bi bi-pencil-fill"></i>
+                        Edit
+                    </button>
+
+                </div>
+            </div>`;
+
+            // Edit btn
+            const edit_btn = post.querySelector('.edit_btn');
+            edit_btn.onclick = (event) => {
+
+                let text = post.querySelector('.text');
+
+                // Edit the post
+                if (edit_btn.dataset.type === 'edit') {
+                    
+                    // Add textarea with initial text
+                    text.style.display = 'none';
+                    let tarea = document.createElement('textarea');
+                    tarea.className = 'form-control my-1';
+                    tarea.value = text.innerHTML;
+                    text.insertAdjacentElement('afterend', tarea);
+
+                    // Edit btn to save
+                    edit_btn.innerHTML = '<i class="bi bi-save"></i> Save';
+                    edit_btn.className = 'edit_btn btn btn-primary';
+                    edit_btn.dataset.type = 'save';
+                
+                // Save new version
+                } else {
+                    let tarea = post.querySelector('textarea');
+                    text.innerHTML = tarea.value;
+                    text.style.display = 'block';
+                    tarea.remove();
+
+                    // Edit btn to edit
+                    edit_btn.innerHTML = '<i class="bi bi-pencil-fill"></i> Edit';
+                    edit_btn.className = 'edit_btn btn btn-outline-primary';
+                    edit_btn.dataset.type = 'edit';
+                }
+            };
 
             // Portfolio page
             const h5 = post.querySelector('h5');

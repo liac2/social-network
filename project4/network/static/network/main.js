@@ -119,6 +119,7 @@ function profile (data, page) {
                 }
                 followers_p.innerHTML = `${text[0]} ${followers_count + count}`;
             };
+
         }
         
         // Display users posts
@@ -132,8 +133,35 @@ function profile (data, page) {
             <h5 class="mb-1">${data.creator}</h5>
             <small>${data.time}</small>
             </div>
-            <p class="mb-1">${data.text}</p>
-            <p class="mb-1">${data.likes}</p>`;
+            <p class="mb-1 text">${data.text}</p>
+            <div class="row justify-content-between">
+                <div class="col-md-auto likes_div">
+                    <i data-like="true" class="fs-6 text-danger icon-heart bi bi-heart"></i>
+                    <p class="mb-1 fs-6 fw-medium likes_count d-inline">${data.likes}</p>
+                </div>
+            </div>`;
+
+             // Edit btn
+             if (d.viewer.authenticated && d.viewer.email === data.creator) {
+                let likes_div = entry.querySelector('.likes_div');
+
+                // Create div for btn
+                let edit_div = entry.querySelector('.edit_btn_div');
+                if (!edit_div) {
+                    let edit_div = document.createElement('div');
+                    edit_div.className = 'col-md-auto edit_btn_div';
+                    edit_div.innerHTML = `<button data-type="edit" class="edit_btn btn btn-outline-primary">
+                        <i class="bi bi-pencil-fill"></i>
+                        Edit
+                    </button>`;
+                    likes_div.insertAdjacentElement('afterend', edit_div);
+                }
+                
+                edit_post(entry, data);
+            }
+
+            // Likes btn
+            like_post(entry, data);
 
             // Append post to posts div
             profile_posts_div.append(entry);
@@ -171,41 +199,17 @@ function all_posts (type, page) {
             <h5 class="mb-1">${data.creator}</h5>
             <small>${data.time}</small>
             </div>
-            
-            
             <p class="mb-1 text">${data.text}</p>
             <div class="row justify-content-between">
                 <div class="col-md-auto likes_div">
-                    <i data-like="true" class="text-danger icon-heart bi bi-heart"></i>
+                    <i data-like="true" class="fs-6 text-danger icon-heart bi bi-heart"></i>
                     <p class="mb-1 fs-6 fw-medium likes_count d-inline">${data.likes}</p>
                 </div>
             </div>`;
 
-            // Likes
-            let heart = post.querySelector('.icon-heart');
-            let likes = post.querySelector('.likes_count');
-            let likes_count = parseInt(likes.textContent);
-            heart.onclick = () => {
-                if (heart.dataset.like === 'true') {
-                    likes_count++;
-                    heart.dataset.like = 'false';
-                    heart.className = 'text-danger icon-heart bi bi-heart-fill';
-                } else {
-                    likes_count--;
-                    heart.dataset.like = 'true';
-                    heart.className = 'text-danger icon-heart bi bi-heart';
-                }
-                likes.textContent = likes_count.toString();
-
-                // Send data to db
-                fetch(`/?id=${data.id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        following: follow
-                    })
-                });
-                
-            };
+            // Likes btn
+            like_post(post, data);
+            
 
             // Edit btn
             if (posts_data.viewer.authenticated && posts_data.viewer.email === data.creator) {
@@ -286,4 +290,41 @@ function edit_post (post, data) {
             });
         }
     };
+}
+
+function like_post(post, data) {
+    let heart = post.querySelector('.icon-heart');
+    let likes = post.querySelector('.likes_count');
+    let likes_count = parseInt(likes.textContent);
+    heart.onclick = () => {
+        if (heart.dataset.like === 'true') {
+            likes_count++;
+            heart.dataset.like = 'false';
+            heart.className = 'text-danger icon-heart bi bi-heart-fill';
+        } else {
+            likes_count--;
+            heart.dataset.like = 'true';
+            heart.className = 'text-danger icon-heart bi bi-heart';
+        }
+        likes.textContent = likes_count.toString();
+
+        // Send data to db
+        fetch(`post`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                likes: likes_count,
+                id: data.id
+            })
+        });
+    };
+
+    // Add animation to heart
+    heart.addEventListener('mouseover', () => {
+        heart.className = 'text-danger icon-heart bi bi-heart-fill';
+    });
+    heart.addEventListener('mouseout', () => {
+        if (heart.dataset.like !== 'false') {
+            heart.className = 'text-danger icon-heart bi bi-heart';
+        }
+    });
 }

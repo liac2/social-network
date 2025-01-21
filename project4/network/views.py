@@ -38,13 +38,21 @@ def post(request):
     
     # Update text of post
     elif request.method == "PUT" and request.user.is_authenticated:
+
+        # Get data
         data = json.loads(request.body)
         id = data.get('id')
         post = Post.objects.get(pk=id)
+
+        # Handle invalid request
         if request.user != post.user:
             return HttpResponse(status=403)
-        text = data.get('text')
-        post.text = text
+        
+        # Save sended data
+        if data.get("text") is not None:
+            post.text = data["text"]
+        elif data.get("likes") is not None:
+            post.likes = data["likes"]
         post.save()
         return HttpResponse(status=204)
         

@@ -15,7 +15,7 @@ function pagination (data, type) {
     ReactDOM.render(<Pagination d={data}/>, pagination);
 }
 
-function Pagination (props) {
+function Pagination (props) { 
 
     const [state, setState] = React.useState(props.d);
 

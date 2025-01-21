@@ -174,28 +174,35 @@ function all_posts (type, page) {
             
             
             <p class="mb-1 text">${data.text}</p>
-            <div class="row justify-content-between bottom_post_div">
-                <div class="col-md-auto">
-                    <p class="mb-1">${data.likes}</p>
-
+            <div class="row justify-content-between">
+                <div class="col-md-auto likes_div">
+                    <i class="text-danger icon-heart bi bi-heart"></i>
+                    <p class="mb-1 fs-6 fw-medium likes_count d-inline">${data.likes}</p>
                 </div>
             </div>`;
 
+            // Likes
+            let heart = post.querySelector('.icon-heart');
+            let likes = post.querySelector('.likes_count');
+            heart.
+
             // Edit btn
-            if (data.viewer.authenticated && data.viewer.email === data.creator) {
-                let b_post_div = document.querySelector('.bottom_post_div');
+            if (posts_data.viewer.authenticated && posts_data.viewer.email === data.creator) {
+                let likes_div = post.querySelector('.likes_div');
+
+                // Create div for btn
                 let edit_div = post.querySelector('.edit_btn_div');
                 if (!edit_div) {
                     let edit_div = document.createElement('div');
-                    edit_div.className = 'col-md-auto d-none edit_btn_div';
+                    edit_div.className = 'col-md-auto edit_btn_div';
                     edit_div.innerHTML = `<button data-type="edit" class="edit_btn btn btn-outline-primary">
                         <i class="bi bi-pencil-fill"></i>
                         Edit
                     </button>`;
-                    document.querySelector('.bottom_post_div').append(edit_div);
+                    likes_div.insertAdjacentElement('afterend', edit_div);
                 }
                 
-                edit_post(edit_btn, post, data);
+                edit_post(post, data);
             }
             
 
@@ -216,6 +223,7 @@ function all_posts (type, page) {
 
 function edit_post (post, data) {
     const edit_btn = post.querySelector('.edit_btn');
+
     edit_btn.onclick = (event) => {
 
         let text = post.querySelector('.text');

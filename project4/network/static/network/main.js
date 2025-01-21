@@ -176,7 +176,7 @@ function all_posts (type, page) {
             <p class="mb-1 text">${data.text}</p>
             <div class="row justify-content-between">
                 <div class="col-md-auto likes_div">
-                    <i class="text-danger icon-heart bi bi-heart"></i>
+                    <i data-like="true" class="text-danger icon-heart bi bi-heart"></i>
                     <p class="mb-1 fs-6 fw-medium likes_count d-inline">${data.likes}</p>
                 </div>
             </div>`;
@@ -184,7 +184,28 @@ function all_posts (type, page) {
             // Likes
             let heart = post.querySelector('.icon-heart');
             let likes = post.querySelector('.likes_count');
-            heart.
+            let likes_count = parseInt(likes.textContent);
+            heart.onclick = () => {
+                if (heart.dataset.like === 'true') {
+                    likes_count++;
+                    heart.dataset.like = 'false';
+                    heart.className = 'text-danger icon-heart bi bi-heart-fill';
+                } else {
+                    likes_count--;
+                    heart.dataset.like = 'true';
+                    heart.className = 'text-danger icon-heart bi bi-heart';
+                }
+                likes.textContent = likes_count.toString();
+
+                // Send data to db
+                fetch(`/?id=${data.id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        following: follow
+                    })
+                });
+                
+            };
 
             // Edit btn
             if (posts_data.viewer.authenticated && posts_data.viewer.email === data.creator) {

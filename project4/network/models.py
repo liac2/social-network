@@ -11,7 +11,7 @@ class Post(models.Model):
     text = models.CharField(max_length=300)
     time = models.DateTimeField(auto_now_add=True)
     likes = models.PositiveIntegerField(default=0)
-    users_liked = models.ManyToManyField(User, on_delete=models.CASCADE, related_name="liked")
+    users_liked = models.ManyToManyField(User, related_name="liked")
     
     def serialize(self):
         return {
@@ -19,5 +19,5 @@ class Post(models.Model):
             "creator": self.user.username,
             "text": self.text,
             "time": self.time.strftime("%b %d %Y, %I:%M %p"),
-            "likes": self.likes
+            "likes": self.likes,
         }

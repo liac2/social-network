@@ -190,7 +190,9 @@ function all_posts (type, page) {
 
         // List all posts
         let posts = posts_data.posts
-        for (let data of posts) {
+        for (let all_data of posts) {
+
+            let data = all_data.post
             let post = document.createElement('div');
             post.className = 'list-group-item list-group-item-action list-group-item-light bg-light';
             post.ariaCurrent = 'true';
@@ -202,10 +204,13 @@ function all_posts (type, page) {
             <p class="mb-1 text">${data.text}</p>
             <div class="row justify-content-between">
                 <div class="col-md-auto likes_div">
-                    <i data-like="true" class="fs-6 text-danger icon-heart bi bi-heart"></i>
+                    <i data-like="${all_data.liked}" class="fs-6 text-danger icon-heart${all_data.liked ? '-fill' : ''} bi bi-heart"></i>
                     <p class="mb-1 fs-6 fw-medium likes_count d-inline">${data.likes}</p>
                 </div>
             </div>`;
+
+            console.log(all_data.users);
+
 
             // Likes btn
             like_post(post, data);
@@ -297,14 +302,16 @@ function like_post(post, data) {
     let likes = post.querySelector('.likes_count');
     let likes_count = parseInt(likes.textContent);
     heart.onclick = () => {
-        let liked = heart.dataset.like;
-        if (heart.dataset.like === 'true') {
+        let liked = heart.dataset.like === 'true';
+        if (liked) {
             likes_count++;
-            heart.dataset.like = 'false';
+            liked = !liked;
+            heart.dataset.like = liked.toString();
             heart.className = 'text-danger icon-heart bi bi-heart-fill';
         } else {
             likes_count--;
-            heart.dataset.like = 'true';
+            liked = !liked;
+            heart.dataset.like = liked.toString();
             heart.className = 'text-danger icon-heart bi bi-heart';
         }
         likes.textContent = likes_count.toString();
@@ -313,9 +320,8 @@ function like_post(post, data) {
         fetch(`post`, {
             method: 'PUT',
             body: JSON.stringify({
-                likes: likes_count,
                 id: data.id,
-                liked: 
+                liked: liked
             })
         });
     };

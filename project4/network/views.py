@@ -47,23 +47,24 @@ def post(request):
         except Post.DoesNotExist:
             return HttpResponse(status=404)
 
-        # Handle invalid request
-        if request.user != post.user:
-            return HttpResponse(status=403)
-        
-        # Save sended data
-        if data.get("text") is not None:
-            post.text = data["text"]
-        elif data.get("liked") is not None:
+        if data.get("liked") is not None:
             u = request.user
             exists = post.users_liked.filter(id=u.id).exists()
             if data['liked'] and not exists:
                 post.users_liked.add(request.user)
-                post.likes += 1
             elif exists:
                 post.users_liked.remove(request.user)
-                post.likes -= 1
-        post.save()
+            post.save()
+
+        
+        # Save sended data
+        elif data.get("text") is not None:
+            # Handle invalid request
+            if request.user != post.user:
+                return HttpResponse(status=403)
+        
+            post.text = data["text"]
+        
         return HttpResponse(status=204)
         
     # GET

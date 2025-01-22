@@ -297,6 +297,7 @@ function like_post(post, data) {
     let likes = post.querySelector('.likes_count');
     let likes_count = parseInt(likes.textContent);
     heart.onclick = () => {
+        let liked = heart.dataset.like;
         if (heart.dataset.like === 'true') {
             likes_count++;
             heart.dataset.like = 'false';
@@ -313,7 +314,8 @@ function like_post(post, data) {
             method: 'PUT',
             body: JSON.stringify({
                 likes: likes_count,
-                id: data.id
+                id: data.id,
+                liked: 
             })
         });
     };

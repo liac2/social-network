@@ -204,13 +204,12 @@ function all_posts (type, page) {
             <p class="mb-1 text">${data.text}</p>
             <div class="row justify-content-between">
                 <div class="col-md-auto likes_div">
-                    <i data-like="${all_data.liked}" class="fs-6 text-danger icon-heart${all_data.liked ? '-fill' : ''} bi bi-heart"></i>
+                    <i data-like="${all_data.liked}" class="fs-6 text-danger icon-heart bi bi-heart${all_data.liked ? '-fill' : ''}"></i>
                     <p class="mb-1 fs-6 fw-medium likes_count d-inline">${data.likes}</p>
                 </div>
             </div>`;
 
-            console.log(all_data.users);
-
+            console.log(all_data);
 
             // Likes btn
             like_post(post, data);
@@ -301,38 +300,41 @@ function like_post(post, data) {
     let heart = post.querySelector('.icon-heart');
     let likes = post.querySelector('.likes_count');
     let likes_count = parseInt(likes.textContent);
-    heart.onclick = () => {
-        let liked = heart.dataset.like === 'true';
-        if (liked) {
-            likes_count++;
-            liked = !liked;
-            heart.dataset.like = liked.toString();
+    if (heart) {
+        heart.onclick = () => {
+            let liked = heart.dataset.like === 'true';
+            if (!liked) {
+                likes_count++;
+                liked = !liked;
+                heart.dataset.like = liked.toString();
+                heart.className = 'text-danger icon-heart bi bi-heart-fill';
+            } else {
+                likes_count--;
+                liked = !liked;
+                heart.dataset.like = liked.toString();
+                heart.className = 'text-danger icon-heart bi bi-heart';
+            }
+            likes.textContent = likes_count.toString();
+    
+            // Send data to db
+            fetch(`post`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    id: data.id,
+                    liked: liked
+                })
+            });
+        };
+        // Add animation to heart
+        heart.addEventListener('mouseover', () => {
             heart.className = 'text-danger icon-heart bi bi-heart-fill';
-        } else {
-            likes_count--;
-            liked = !liked;
-            heart.dataset.like = liked.toString();
-            heart.className = 'text-danger icon-heart bi bi-heart';
-        }
-        likes.textContent = likes_count.toString();
-
-        // Send data to db
-        fetch(`post`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                id: data.id,
-                liked: liked
-            })
         });
-    };
+        heart.addEventListener('mouseout', () => {
+            if (heart.dataset.like === 'false') {
+                heart.className = 'text-danger icon-heart bi bi-heart';
+            }
+        });
+    }
 
-    // Add animation to heart
-    heart.addEventListener('mouseover', () => {
-        heart.className = 'text-danger icon-heart bi bi-heart-fill';
-    });
-    heart.addEventListener('mouseout', () => {
-        if (heart.dataset.like !== 'false') {
-            heart.className = 'text-danger icon-heart bi bi-heart';
-        }
-    });
+
 }

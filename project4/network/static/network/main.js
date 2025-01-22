@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.json())
             .then(result => {
+                console.log('all: ');
                 console.log(result);
                 input.value = '';
             })
@@ -124,7 +125,9 @@ function profile (data, page) {
         
         // Display users posts
         profile_posts_div = page.querySelector('.posts');
-        for (let data of d.posts) {
+        for (let all_data of d.posts) {
+
+            let data = all_data.post
             let entry = document.createElement('div');
             entry.className = 'list-group-item list-group-item-action list-group-item-light bg-light';
             entry.ariaCurrent = 'true';
@@ -136,7 +139,7 @@ function profile (data, page) {
             <p class="mb-1 text">${data.text}</p>
             <div class="row justify-content-between">
                 <div class="col-md-auto likes_div">
-                    <i data-like="true" class="fs-6 text-danger icon-heart bi bi-heart"></i>
+                    <i data-like="${all_data.liked}" class="fs-6 text-danger icon-heart bi bi-heart${all_data.liked ? '-fill' : ''}"></i>
                     <p class="mb-1 fs-6 fw-medium likes_count d-inline">${data.likes}</p>
                 </div>
             </div>`;

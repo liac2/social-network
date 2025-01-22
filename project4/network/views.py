@@ -87,7 +87,6 @@ def post(request):
             posts.append({
                 'post': post.serialize(), 
                 'liked':  post.users_liked.filter(id=request.user.id).exists(),
-                'users': [p.email for p in post.users_liked.all()]
             })
         
         response = {
@@ -118,11 +117,19 @@ def profile(request):
         paginator = Paginator(posts, 10)
         page_obj = paginator.get_page(page_number)
         viewer = request.user
+
+        # Prepare posts
+        posts = []
+        for post in page_obj:
+            posts.append({
+                'post': post.serialize(), 
+                'liked':  post.users_liked.filter(id=request.user.id).exists(),
+            })
         
         return JsonResponse({
             'following': creator.following.count(),
             'followers': creator.followers.count(),
-            'posts': [post.serialize() for post in page_obj],
+            'posts': posts,
             'pagination': {
                 'has_next': page_obj.has_next(),
                 'has_previous': page_obj.has_previous(),

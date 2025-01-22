@@ -42,7 +42,10 @@ def post(request):
         # Get data
         data = json.loads(request.body)
         id = data.get('id')
-        post = Post.objects.get(pk=id)
+        try:
+            post = Post.objects.get(pk=id)
+        except Post.DoesNotExist:
+            return HttpResponse(status=404)
 
         # Handle invalid request
         if request.user != post.user:
@@ -51,12 +54,19 @@ def post(request):
         # Save sended data
         if data.get("text") is not None:
             post.text = data["text"]
-        elif data.get("likes") is not None:
-            post.likes = data["likes"]
-            post.users_liked.add(request.user)
+        elif data.get("liked") is not None:
+            u = request.user
+            exists = post.users_liked.filter(id=u.id).exists()
+            if data['liked'] and not exists:
+                post.users_liked.add(request.user)
+                post.likes += 1
+            elif exists:
+                post.users_liked.remove(request.user)
+                post.likes -= 1
         post.save()
         return HttpResponse(status=204)
         
+    # GET
     else:
         type = request.GET.get('type')
         page_number = request.GET.get('page')
@@ -70,9 +80,17 @@ def post(request):
             posts = Post.objects.filter(user__in=following_users).order_by('-time')
             paginator = Paginator(posts, 10)
             page_obj = paginator.get_page(page_number)
+
+        posts = []
+        for post in page_obj:
+            posts.append({
+                'post': post.serialize(), 
+                'liked':  post.users_liked.filter(id=request.user.id).exists(),
+                'users': [p.email for p in post.users_liked.all()]
+            })
         
         response = {
-            'posts': [post.serialize() for post in page_obj],
+            'posts': posts,
             'pagination': {
                 'has_next': page_obj.has_next(),
                 'has_previous': page_obj.has_previous(),

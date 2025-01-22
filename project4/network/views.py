@@ -53,6 +53,7 @@ def post(request):
             post.text = data["text"]
         elif data.get("likes") is not None:
             post.likes = data["likes"]
+            post.users_liked.add(request.user)
         post.save()
         return HttpResponse(status=204)
         

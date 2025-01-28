@@ -20,3 +20,5 @@ class Post(models.Model):
             "time": self.time.strftime("%b %d %Y, %I:%M %p"),
             "likes": self.users_liked.count(),
         }
+    class Meta:
+        ordering = ['time']

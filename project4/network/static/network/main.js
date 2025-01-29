@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.onclick = (event) => {
             let input = document.querySelector('#new_post_input');
             const text = input.value;
-            fetch('/post', {
+            fetch('api/posts/', {
                 method: 'POST',
                 body: JSON.stringify({
                     text: text
@@ -59,7 +59,7 @@ function profile (data, page) {
     window.profile_view.style.display = 'block';
 
     // Get data for user
-    fetch(`/profile?id=${data.id}&page=${page}`)
+    fetch(`api/posts/${data.id}/profile/?page=${page}`)
     .then(response => response.json())
     .then(d => {
         
@@ -68,7 +68,7 @@ function profile (data, page) {
 
         // Check if viewer can follow
         if (d.viewer.authenticated && d.viewer.email !== d.email) {
-            if (d.viewer.following) {
+            if (d.profile.followed_by_user) {
                 follow_btn = '<button data-follow="unfollow" class="btn-primary btn">Unfollow</button>';
             } else {
                 follow_btn = '<button data-follow="follow" class="btn-primary btn">Follow</button>';
@@ -76,17 +76,18 @@ function profile (data, page) {
         }
 
         // Display profile
+        profile_data = d.profile
         const page = document.querySelector('#profile');
-        page.innerHTML = `<h1>${d.email}</h1>
-            <p id="followers">Followers: ${d.followers}</p>
-            <p>Following: ${d.following}</p>
+        page.innerHTML = `<h1>${profile_data.email}</h1>
+            <p id="followers">Followers: ${profile_data.followers}</p>
+            <p>Following: ${profile_data.following}</p>
             ${follow_btn}
             <hr>
             <h2>Posts</h2>
             <div class="posts list-group"></div>`;
         
         // Follow btn logic
-        if (d.viewer.authenticated && d.viewer.email !== d.email) {
+        if (d.viewer.authenticated && d.viewer.email !== d.profile.email) {
             page.querySelector('button').onclick = (event) => {
                 
                 // Follow / Unfollow creator
@@ -97,7 +98,7 @@ function profile (data, page) {
                 }
 
                 // Send data to db
-                fetch(`/profile?id=${data.id}`, {
+                fetch(`api/posts/${data.id}/profile/`, {
                     method: 'PUT',
                     body: JSON.stringify({
                         following: follow
@@ -164,7 +165,9 @@ function profile (data, page) {
             }
 
             // Likes btn
-            like_post(entry, data);
+            if (d.viewer.authenticated){
+                like_post(entry, data);
+            }
 
             // Append post to posts div
             profile_posts_div.append(entry);
@@ -186,7 +189,7 @@ function all_posts (type, page) {
     window.profile_view && (window.profile_view.innerHTML = '');
 
 
-    fetch(`/post?type=${type}&page=${page}`)
+    fetch(`api/posts/${type}?page=${page}`)
     .then(response => response.json())
     .then(posts_data => {
         console.log(posts_data);
@@ -215,7 +218,9 @@ function all_posts (type, page) {
             console.log(all_data);
 
             // Likes btn
-            like_post(post, data);
+            if (posts_data.viewer.authenticated){
+                like_post(post, data);
+            }
             
 
             // Edit btn
@@ -288,7 +293,7 @@ function edit_post (post, data) {
             edit_btn.dataset.type = 'edit';
 
             // Send new post to server
-            fetch(`post`, {
+            fetch(`api/posts/`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     text: text.innerHTML,
@@ -320,10 +325,9 @@ function like_post(post, data) {
             likes.textContent = likes_count.toString();
     
             // Send data to db
-            fetch(`post`, {
+            fetch(`api/posts/${data.id}/`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    id: data.id,
                     liked: liked
                 })
             });

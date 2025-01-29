@@ -12,8 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source="user.username")
-    likes_count = serializers.IntegerField(source="users_liked.count", read_only=True)
+    likes = serializers.IntegerField(source="users_liked.count", read_only=True)
+    time = serializers.SerializerMethodField() 
 
     class Meta:
         model = Post
-        fields = ["id", "creator", "text", "time", "likes_count"]
+        fields = ["id", "creator", "text", "time", "likes"]
+
+    def get_time(self, obj):
+        return obj.time.strftime("%b %d %Y, %I:%M %p")

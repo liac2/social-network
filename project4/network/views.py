@@ -72,7 +72,7 @@ class PostViewSet(viewsets.ModelViewSet):
         """Holt alle Posts mit Pagination"""
         page_number = request.GET.get("page", 1)
         posts = Post.objects.order_by("-time").all()
-        return self.paginate_posts(posts, page_number, request)
+        return self.paginate_posts(posts, page_number, request, None)
 
     @action(detail=False, methods=["get"])
     def following(self, request):
@@ -83,9 +83,47 @@ class PostViewSet(viewsets.ModelViewSet):
         page_number = request.GET.get("page", 1)
         following_users = request.user.following.all()
         posts = Post.objects.filter(user__in=following_users).order_by("-time")
-        return self.paginate_posts(posts, page_number, request)
+        return self.paginate_posts(posts, page_number, request, None)
 
-    def paginate_posts(self, posts, page_number, request):
+    @action(detail=True, methods=["get"], url_path="profile")
+    def profile(self, request, pk=None):
+        """Zeigt Profile page mit posts an"""
+
+        page_number = request.GET.get("page", 1)
+
+        try:
+            post = Post.objects.get(pk=pk)  
+            creator = post.user  
+            posts = creator.posts.all()
+            return self.paginate_posts(posts, page_number, request, creator)
+        
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+    @action(detail=True, methods=["put"], url_path="profile/follow")
+    def follow_profile(self, request, pk=None):
+        """Follow / Unfollow profile"""
+
+        try:
+            post = Post.objects.get(pk=pk)  
+            creator = post.user  
+            viewer = request.user
+        
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if 'following' in request.data:
+            viewer.following.add(creator)
+            viewer.save()
+            return Response({"message": "Follow status updated."}, status=status.HTTP_204_NO_CONTENT)
+        elif 'unfollow' in request.data:
+            viewer.following.remove(creator)
+            viewer.save()
+            return Response({"message": "Follow status updated."}, status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    def paginate_posts(self, posts, page_number, request, creator):
         """Hilfsmethode für die Pagination"""
         paginator = Paginator(posts, 10)
         page_obj = paginator.get_page(page_number)
@@ -111,11 +149,21 @@ class PostViewSet(viewsets.ModelViewSet):
                 "authenticated": request.user.is_authenticated,
             },
         }
+
+        # Profile page
+        if creator:
+            viewer = request.user
+            response['profile'] = {
+                'following': creator.following.count(),
+                'followers': creator.followers.count(),
+                'email': creator.email,
+                'followed_by_user': viewer.following.filter(id=creator.id).exists() if viewer.is_authenticated else ''
+            }
         return Response(response)
+   
 
 
-
-
+# OLD CODE
 # @csrf_exempt
 # def post(request):
 #     if request.method == "POST" and request.user.is_authenticated:
@@ -206,67 +254,67 @@ class PostViewSet(viewsets.ModelViewSet):
 #         return JsonResponse(response, safe=False)
         
 
-@csrf_exempt
-def profile(request):
+# @csrf_exempt
+# def profile(request):
 
-    # Return profile page
-    if request.method == "GET":
-        id = request.GET.get('id')
-        page_number = request.GET.get('page')
-        creator = Post.objects.get(pk=id).user
-        posts = creator.posts.order_by("-time").all()
-        paginator = Paginator(posts, 10)
-        page_obj = paginator.get_page(page_number)
-        viewer = request.user
+#     # Return profile page
+#     if request.method == "GET":
+#         id = request.GET.get('id')
+#         page_number = request.GET.get('page')
+#         creator = Post.objects.get(pk=id).user
+#         posts = creator.posts.order_by("-time").all()
+#         paginator = Paginator(posts, 10)
+#         page_obj = paginator.get_page(page_number)
+#         viewer = request.user
 
-        # Prepare posts
-        posts = []
-        for post in page_obj:
-            posts.append({
-                'post': post.serialize(), 
-                'liked':  post.users_liked.filter(id=request.user.id).exists(),
-            })
+#         # Prepare posts
+#         posts = []
+#         for post in page_obj:
+#             posts.append({
+#                 'post': post.serialize(), 
+#                 'liked':  post.users_liked.filter(id=request.user.id).exists(),
+#             })
         
-        return JsonResponse({
-            'following': creator.following.count(),
-            'followers': creator.followers.count(),
-            'posts': posts,
-            'pagination': {
-                'has_next': page_obj.has_next(),
-                'has_previous': page_obj.has_previous(),
-                'num_pages': list(page_obj.paginator.page_range),
-                'current': page_obj.number,
-            },
-            'email': creator.email,
-            'viewer': {
-                'email': request.user.email if viewer.is_authenticated else '',
-                'authenticated': viewer.is_authenticated,
-                'following': creator in viewer.following.all() if viewer.is_authenticated else ''
-            }
-        })
+#         return JsonResponse({
+#             'following': creator.following.count(),
+#             'followers': creator.followers.count(),
+#             'posts': posts,
+#             'pagination': {
+#                 'has_next': page_obj.has_next(),
+#                 'has_previous': page_obj.has_previous(),
+#                 'num_pages': list(page_obj.paginator.page_range),
+#                 'current': page_obj.number,
+#             },
+#             'email': creator.email,
+#             'viewer': {
+#                 'email': request.user.email if viewer.is_authenticated else '',
+#                 'authenticated': viewer.is_authenticated,
+#                 'following': creator in viewer.following.all() if viewer.is_authenticated else ''
+#             }
+#         })
 
-    # Update whether user follows or unfollows
-    elif request.method == "PUT":
-        id = request.GET.get('id')
-        creator = Post.objects.get(pk=id).user
-        viewer = request.user
-        data = json.loads(request.body)
+#     # Update whether user follows or unfollows
+#     elif request.method == "PUT":
+#         id = request.GET.get('id')
+#         creator = Post.objects.get(pk=id).user
+#         viewer = request.user
+#         data = json.loads(request.body)
 
-        # Follow
-        if data.get("following"):
-            viewer.following.add(creator)
+#         # Follow
+#         if data.get("following"):
+#             viewer.following.add(creator)
 
-        # Unfollow
-        else:
-            viewer.following.remove(creator)
+#         # Unfollow
+#         else:
+#             viewer.following.remove(creator)
             
-        viewer.save()
-        return HttpResponse(status=204)
+#         viewer.save()
+#         return HttpResponse(status=204)
 
-    else:
-        return JsonResponse({
-            "error": "GET or PUT request required."
-        }, status=400)
+#     else:
+#         return JsonResponse({
+#             "error": "GET or PUT request required."
+#         }, status=400)
 
 
 def login_view(request):

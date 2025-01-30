@@ -1,18 +1,23 @@
 
 function pagination (data, type) {
-    let pagination = document.querySelector('#pagination');
-    if (pagination === null) {
-        pagination = document.createElement('div');
-        pagination.id = 'pagination';
-        window.type = type;
-
-        if (type === 'all' || type === 'following') {
-            window.view.append(pagination);
-        } else if (type === 'profile') {
-            window.profile_view.append(pagination);
-        }
+    let pagination_div = window.profile_view.querySelector('#pagination');
+    if (type === 'all' || type === 'following') {
+        pagination_div = window.view.querySelector('#pagination');
     }
-    ReactDOM.render(<Pagination d={data}/>, pagination);
+    if (pagination_div === null) {
+        pagination_div = document.createElement('div');
+        pagination_div.id = 'pagination';
+        window.type = type;
+    }
+    if (type === 'profile') {
+        window.profile_view.append(pagination_div);
+        // console.log('div');
+        // console.log(window.profile_view);
+    } else {
+        window.view.append(pagination_div);
+    }
+    
+    ReactDOM.render(<Pagination d={data}/>, pagination_div);
 }
 
 function Pagination (props) { 

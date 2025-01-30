@@ -7,6 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.view_btn = document.querySelector('#all_posts_view_btn');
     window.profile_view = document.querySelector('#profile');
 
+    // Enable history in website
+    window.onpopstate = (event) => {
+        if (event.state.view === 'profile'){
+            profile(event.state.data, event.state.page)
+        } else {
+            all_posts(event.state.type, event.state.page)
+        }
+    }
+
     // Create Post
     const btn = document.querySelector('#post_btn');
     if (btn) {
@@ -47,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function profile (data, page) {
+function profile (data, page_num) {
 
     // Hide old page
     if (window.section !== null) {
@@ -58,10 +67,15 @@ function profile (data, page) {
     window.profile_view.innerHTML = '';
     window.profile_view.style.display = 'block';
 
+
+
     // Get data for user
-    fetch(`api/posts/${data.id}/profile/?page=${page}`)
+    fetch(`api/posts/${data.id}/profile/?page=${page_num}`)
     .then(response => response.json())
     .then(d => {
+
+        // Website History 
+        history.pushState({view: 'profile', data: data.id, page: page_num}, "", `profile/${d.viewer.email}`);
         
         // Display follow btn
         let follow_btn = '';
@@ -98,7 +112,7 @@ function profile (data, page) {
                 }
 
                 // Send data to db
-                fetch(`api/posts/${data.id}/profile/`, {
+                fetch(`api/posts/${data.id}/profile/follow/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -179,6 +193,8 @@ function profile (data, page) {
         }
 
         // Add pagination
+        console.log('pagination server info');
+        console.log(d.pagination);
         pagination(d.pagination, 'profile');
 
         // Append profile page to dom
@@ -194,10 +210,12 @@ function all_posts (type, page) {
     window.profile_view && (window.profile_view.innerHTML = '');
 
 
-    fetch(`api/posts/${type}?page=${page}`)
+    fetch(`api/posts/${type}/?page=${page}`)
     .then(response => response.json())
     .then(posts_data => {
         console.log(posts_data);
+
+        history.pushState({view: 'allposts/', page: page, type: type}, "", `allposts`);
 
         // List all posts
         let posts = posts_data.posts
@@ -297,8 +315,13 @@ function edit_post (post, data) {
             edit_btn.dataset.type = 'edit';
 
             // Send new post to server
-            fetch(`api/posts/`, {
-                method: 'PUT',
+            fetch(`api/posts/${data.id}/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') 
+                },
+                credentials: 'include',
                 body: JSON.stringify({
                     text: text.innerHTML,
                     id: data.id

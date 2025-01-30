@@ -67,7 +67,7 @@ function profile (data, page) {
         let follow_btn = '';
 
         // Check if viewer can follow
-        if (d.viewer.authenticated && d.viewer.email !== d.email) {
+        if (d.viewer.authenticated && d.viewer.email !== d.profile.email) {
             if (d.profile.followed_by_user) {
                 follow_btn = '<button data-follow="unfollow" class="btn-primary btn">Unfollow</button>';
             } else {
@@ -99,7 +99,12 @@ function profile (data, page) {
 
                 // Send data to db
                 fetch(`api/posts/${data.id}/profile/`, {
-                    method: 'PUT',
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') 
+                    },
+                    credentials: 'include',
                     body: JSON.stringify({
                         following: follow
                     })
@@ -215,7 +220,6 @@ function all_posts (type, page) {
                 </div>
             </div>`;
 
-            console.log(all_data);
 
             // Likes btn
             if (posts_data.viewer.authenticated){
@@ -326,7 +330,12 @@ function like_post(post, data) {
     
             // Send data to db
             fetch(`api/posts/${data.id}/`, {
-                method: 'PUT',
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') 
+                },
+                credentials: 'include',
                 body: JSON.stringify({
                     liked: liked
                 })
@@ -344,4 +353,19 @@ function like_post(post, data) {
     }
 
 
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

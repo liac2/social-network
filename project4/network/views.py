@@ -100,7 +100,7 @@ class PostViewSet(viewsets.ModelViewSet):
         except Post.DoesNotExist:
             return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
         
-    @action(detail=True, methods=["put"], url_path="profile/follow")
+    @action(detail=True, methods=["patch"], url_path="profile/follow")
     def follow_profile(self, request, pk=None):
         """Follow / Unfollow profile"""
 

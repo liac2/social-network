@@ -15,6 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
             all_posts(event.state.type, event.state.page)
         }
     }
+    window.onload = () => {
+        if (history.state) {
+            console.log(`refresh ${history.state.view}`);
+            if (history.state.view === 'profile'){
+                profile(history.state.data, history.state.page)
+            } else {
+                all_posts(history.state.type, history.state.page)
+            }
+        } else {
+            console.log('reload index');
+            all_posts('all', 1);
+        }
+        
+    }
 
     // Create Post
     const btn = document.querySelector('#post_btn');
@@ -24,6 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = input.value;
             fetch('api/posts/', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') 
+                },
+                credentials: 'include',
                 body: JSON.stringify({
                     text: text
                 })
@@ -75,7 +94,7 @@ function profile (data, page_num) {
     .then(d => {
 
         // Website History 
-        history.pushState({view: 'profile', data: data.id, page: page_num}, "", `profile/${d.viewer.email}`);
+        history.pushState({view: 'profile', data: data, page: page_num}, "", `#profile/${d.viewer.email}`);
         
         // Display follow btn
         let follow_btn = '';
@@ -193,8 +212,6 @@ function profile (data, page_num) {
         }
 
         // Add pagination
-        console.log('pagination server info');
-        console.log(d.pagination);
         pagination(d.pagination, 'profile');
 
         // Append profile page to dom
@@ -210,12 +227,12 @@ function all_posts (type, page) {
     window.profile_view && (window.profile_view.innerHTML = '');
 
 
-    fetch(`api/posts/${type}/?page=${page}`)
+    fetch(`api/posts/${type}?page=${page}`)
     .then(response => response.json())
     .then(posts_data => {
         console.log(posts_data);
 
-        history.pushState({view: 'allposts/', page: page, type: type}, "", `allposts`);
+        history.pushState({view: 'allposts/', page: page, type: type}, "", `#${type}`);
 
         // List all posts
         let posts = posts_data.posts

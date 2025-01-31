@@ -232,7 +232,7 @@ function all_posts (type, page) {
     .then(posts_data => {
         console.log(posts_data);
 
-        history.pushState({view: 'allposts/', page: page, type: type}, "", `#${type}`);
+        history.pushState({view: 'allposts', page: page, type: type}, "", `#${type}`);
 
         // List all posts
         let posts = posts_data.posts

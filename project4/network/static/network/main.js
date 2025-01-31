@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.view_btn = document.querySelector('#all_posts_view_btn');
     window.profile_view = document.querySelector('#profile');
 
+    localStorage.setItem('loaded', false);
+
     // Enable history in website
     window.onpopstate = (event) => {
         if (event.state.view === 'profile'){
@@ -66,13 +68,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // All Posts
-    if (view && view_btn) {
+    if (view && !localStorage.getItem('loaded')) {
+        localStorage.setItem('loaded', true);
         all_posts('all', 1);
+    }
+    if (view_btn) {
         view_btn.onclick = (event) => {
             event.preventDefault();
             all_posts('all', 1);
         } 
     }
+
 });
 
 function profile (data, page_num) {
@@ -168,7 +174,7 @@ function profile (data, page_num) {
 
             let data = all_data.post
             let entry = document.createElement('div');
-            entry.className = 'list-group-item list-group-item-action list-group-item-light bg-light';
+            entry.className = 'list-group-item list-group-item-action list-group-item-light';
             entry.ariaCurrent = 'true';
 
             entry.innerHTML = `<div class="d-flex w-100 justify-content-between">
@@ -230,9 +236,8 @@ function all_posts (type, page) {
     fetch(`api/posts/${type}?page=${page}`)
     .then(response => response.json())
     .then(posts_data => {
-        console.log(posts_data);
 
-        history.pushState({view: 'allposts', page: page, type: type}, "", `#${type}`);
+        history.pushState({view: 'all', page: page, type: type}, "", `#${type}`);
 
         // List all posts
         let posts = posts_data.posts
@@ -240,7 +245,7 @@ function all_posts (type, page) {
 
             let data = all_data.post
             let post = document.createElement('div');
-            post.className = 'list-group-item list-group-item-action list-group-item-light bg-light';
+            post.className = 'list-group-item list-group-item-action list-group-item-light';
             post.ariaCurrent = 'true';
 
             post.innerHTML = `<div class="d-flex w-100 justify-content-between">
@@ -313,6 +318,9 @@ function edit_post (post, data) {
             tarea.className = 'form-control my-1';
             tarea.value = text.innerHTML;
             text.insertAdjacentElement('afterend', tarea);
+            tarea.focus();
+            console.log('focus textarea');
+            tarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             // Edit btn to save
             edit_btn.innerHTML = '<i class="bi bi-save"></i> Save';

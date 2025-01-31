@@ -1,0 +1,15 @@
+// Zuerst die Standard-Variablen importieren
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+
+// Jetzt eigene Variablen setzen (NACH dem Import der Funktionen!)
+$primary: #ff5733;  // Ändert die Hauptfarbe
+$secondary: #6c757d;
+$body-bg: #f8f9fa;
+$font-family-base: 'Arial', sans-serif;
+
+// COLORS FROM HUEMINT: https://huemint.com/website-magazine/#palette=fefdfb-e3eafb-1b1919-582af5
+
+// Bootstrap mit den neuen Variablen kompilieren
+@import "node_modules/bootstrap/scss/bootstrap";

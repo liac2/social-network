@@ -2,7 +2,7 @@
 
 {% block body %}
 
-    <h2>Register</h2>
+    <h2 class="fs-1 fw-semibold  text-center mt-4 mb-5 bg-primary bg-gradient pt-1 pb-2 d-block w-50 mx-auto rounded text-white">Register</h2>
 
     {% if message %}
         <div>{{ message }}</div>
@@ -11,18 +11,14 @@
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+            <input class="form-control mb-3" autofocus type="text" name="username" placeholder="Username">
+            <input class="form-control mb-3" type="email" name="email" placeholder="Email Address">
         </div>
         <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
+            <input class="form-control mb-3" type="password" name="password" placeholder="Password">
+            <input class="form-control mb-2" type="password" name="confirmation" placeholder="Confirm Password">
+            <input class="btn btn-primary mb-3" type="submit" value="Register">
         </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
     </form>
 
     Already have an account? <a href="{% url 'login' %}">Log In here.</a>

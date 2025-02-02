@@ -125,7 +125,7 @@ class PostViewSet(viewsets.ModelViewSet):
     
     def paginate_posts(self, posts, page_number, request, creator):
         """Hilfsmethode für die Pagination"""
-        paginator = Paginator(posts, 10)
+        paginator = Paginator(posts, 5)
         page_obj = paginator.get_page(page_number)
 
         serialized_posts = [

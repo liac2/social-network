@@ -2,7 +2,8 @@
 $primary: #582af5;
 $body-bg: #fefdfb;
 $body-color: #1b1919;
-$ligth: #c6c7f7;
+$light: #e3e3fb;
+
 
 // Bootstrap-Funktionen, Variablen und Mixins importieren
 @import "/home/lukas/liac2/project4/node_modules/bootstrap/scss/functions";
@@ -13,3 +14,7 @@ $ligth: #c6c7f7;
 
 // Bootstrap mit den neuen Variablen kompilieren
 @import "/home/lukas/liac2/project4/node_modules/bootstrap/scss/bootstrap";
+
+.list-group-item-action:hover {
+    background-color: $light !important;
+}

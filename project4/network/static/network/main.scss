@@ -18,3 +18,9 @@ $light: #e3e3fb;
 .list-group-item-action:hover {
     background-color: $light !important;
 }
+
+@include media-breakpoint-down(lg) { 
+    .nav-item{
+        padding-left: 16px;
+    }
+}

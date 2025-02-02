@@ -117,11 +117,11 @@ function profile (data, page_num) {
         // Display profile
         profile_data = d.profile
         const page = document.querySelector('#profile');
-        page.innerHTML = `<h1>${profile_data.email}</h1>
+        page.innerHTML = `<h1 class="text-center mt-5">${profile_data.email}</h1>
             <p id="followers">Followers: ${profile_data.followers}</p>
             <p>Following: ${profile_data.following}</p>
             ${follow_btn}
-            <hr>
+            <hr class="text-primary border border-primary border-2 rounded">
             <h2>Posts</h2>
             <div class="posts list-group"></div>`;
         
@@ -178,7 +178,10 @@ function profile (data, page_num) {
             entry.ariaCurrent = 'true';
 
             entry.innerHTML = `<div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">${data.creator}</h5>
+            <h5 class="mb-1">
+            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">${data.creator}</a>
+            
+            </h5>
             <small>${data.time}</small>
             </div>
             <p class="mb-1 text">${data.text}</p>
@@ -249,7 +252,9 @@ function all_posts (type, page) {
             post.ariaCurrent = 'true';
 
             post.innerHTML = `<div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">${data.creator}</h5>
+            <h5 class="mb-1">
+            <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">${data.creator}</a>
+            </h5>
             <small>${data.time}</small>
             </div>
             <p class="mb-1 text">${data.text}</p>
